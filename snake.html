@@ -1,134 +1,135 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Snake Game - Hard</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Snake Game</title>
+
 <style>
-body { background:#000; color:white; text-align:center; font-family:Arial; }
-canvas { background:#111; display:block; margin:20px auto; border:2px solid #ff9900; }
-.back-home { display:block; margin:15px auto; background:#ff9900; color:white; padding:10px 15px; border-radius:6px; text-align:center; text-decoration:none; width:120px;}
-.controls { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); }
-.controls button { width:60px; height:60px; margin:5px; font-size:24px; border:none; border-radius:10px; background:#ff9900; color:white; cursor:pointer; }
+
+body{
+text-align:center;
+font-family:Arial;
+background:#222;
+color:white;
+}
+
+canvas{
+background:black;
+}
+
+button{
+margin:5px;
+padding:10px;
+}
+
 </style>
+
 </head>
+
 <body>
 
-<h1 style="color:#ff9900;">Snake Game - Hard</h1>
+<h2>Snake Game</h2>
+
+<p>Select Speed</p>
+
+<button onclick="startGame(300)">Very Slow</button>
+<button onclick="startGame(150)">Medium</button>
+<button onclick="startGame(90)">Fast</button>
+<button onclick="startGame(50)">Super Fast</button>
+
+<br><br>
+
 <canvas id="game" width="300" height="300"></canvas>
 
-<!-- On-screen controls -->
-<div class="controls">
-    <div>
-        <button onclick="setDirection(0,-1)">↑</button>
-    </div>
-    <div>
-        <button onclick="setDirection(-1,0)">←</button>
-        <button onclick="setDirection(1,0)">→</button>
-    </div>
-    <div>
-        <button onclick="setDirection(0,1)">↓</button>
-    </div>
-</div>
-
-<a href="index.html" class="back-home">🏠 Back to Home</a>
-
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
 
-const scale = 15;
-const rows = canvas.height/scale;
-const columns = canvas.width/scale;
+let canvas=document.getElementById("game")
+let ctx=canvas.getContext("2d")
 
-let snake = [{x:10, y:10}];
-let direction = {x:0, y:0};
-let fruit = {};
-let score = 0;
-let started = false;
+let snake=[{x:10,y:10}]
+let food={x:5,y:5}
+let power={x:15,y:15}
 
-function placeFruit(){
-    fruit = {x: Math.floor(Math.random()*columns), y: Math.floor(Math.random()*rows)};
-}
-placeFruit();
+let dx=1
+let dy=0
 
-function setDirection(x,y){
-    if(x !== -direction.x || y !== -direction.y){
-        direction = {x:x, y:y};
-        started = true; // start game after first move
-    }
-}
+let score=0
+let gameLoop
 
-function update(){
-    if(!started) return; // wait for player to start
-    const head = {x: snake[0].x + direction.x, y: snake[0].y + direction.y};
+document.addEventListener("keydown",changeDirection)
 
-    // Wall collision
-    if(head.x < 0 || head.x >= columns || head.y < 0 || head.y >= rows){
-        alert("Game Over! Score: "+score);
-        snake = [{x:10, y:10}];
-        direction={x:0,y:0};
-        score=0;
-        started=false;
-        placeFruit();
-        return;
-    }
+function startGame(speed){
 
-    // Self collision
-    for(let s of snake){
-        if(head.x===s.x && head.y===s.y){
-            alert("Game Over! Score: "+score);
-            snake = [{x:10, y:10}];
-            direction={x:0,y:0};
-            score=0;
-            started=false;
-            placeFruit();
-            return;
-        }
-    }
+clearInterval(gameLoop)
 
-    snake.unshift(head);
+snake=[{x:10,y:10}]
+score=0
 
-    // Eat fruit
-    if(head.x===fruit.x && head.y===fruit.y){
-        score++;
-        placeFruit();
-    } else {
-        snake.pop();
-    }
+gameLoop=setInterval(draw,speed)
+
 }
 
 function draw(){
-    ctx.fillStyle="black";
-    ctx.fillRect(0,0,canvas.width, canvas.height);
 
-    ctx.fillStyle="lime";
-    for(let s of snake){
-        ctx.fillRect(s.x*scale, s.y*scale, scale, scale);
-    }
+ctx.fillStyle="black"
+ctx.fillRect(0,0,300,300)
 
-    ctx.fillStyle="red";
-    ctx.fillRect(fruit.x*scale, fruit.y*scale, scale, scale);
+ctx.fillStyle="lime"
 
-    ctx.fillStyle="white";
-    ctx.fillText("Score: "+score,10,10);
+snake.forEach(part=>{
+ctx.fillRect(part.x*15,part.y*15,14,14)
+})
+
+ctx.fillStyle="red"
+ctx.fillRect(food.x*15,food.y*15,14,14)
+
+ctx.fillStyle="blue"
+ctx.fillRect(power.x*15,power.y*15,14,14)
+
+let head={
+x:snake[0].x+dx,
+y:snake[0].y+dy
 }
 
-function gameLoop(){
-    update();
-    draw();
+snake.unshift(head)
+
+if(head.x==food.x && head.y==food.y){
+
+score+=1
+
+food={
+x:Math.floor(Math.random()*20),
+y:Math.floor(Math.random()*20)
 }
 
-// Fast speed = harder
-setInterval(gameLoop, 80);
+}else if(head.x==power.x && head.y==power.y){
 
-// Optional: keyboard support
-window.addEventListener("keydown", e => {
-    switch(e.key){
-        case "ArrowUp": setDirection(0,-1); break;
-        case "ArrowDown": setDirection(0,1); break;
-        case "ArrowLeft": setDirection(-1,0); break;
-        case "ArrowRight": setDirection(1,0); break;
-    }
-});
+score+=5
+
+power={
+x:Math.floor(Math.random()*20),
+y:Math.floor(Math.random()*20)
+}
+
+}else{
+
+snake.pop()
+
+}
+
+}
+
+function changeDirection(e){
+
+if(e.key=="ArrowUp"){dx=0;dy=-1}
+if(e.key=="ArrowDown"){dx=0;dy=1}
+if(e.key=="ArrowLeft"){dx=-1;dy=0}
+if(e.key=="ArrowRight"){dx=1;dy=0}
+
+}
+
 </script>
 
 </body>
