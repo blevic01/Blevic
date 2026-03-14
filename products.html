@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,43 +11,22 @@
 
 body{
 font-family:Arial;
-margin:0;
 background:#f2f2f2;
-}
-
-.header{
-background:#ff9900;
-color:white;
-padding:12px;
 text-align:center;
-font-weight:bold;
 }
 
-.products{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-}
-
-.card{
+.product{
 background:white;
-margin:10px;
-padding:10px;
-width:160px;
+margin:20px;
+padding:15px;
 box-shadow:0 2px 5px rgba(0,0,0,0.2);
-text-align:center;
-}
-
-.card img{
-width:100%;
 }
 
 button{
+padding:10px;
 background:#ff6600;
-border:none;
-padding:8px;
 color:white;
-margin-top:5px;
+border:none;
 }
 
 </style>
@@ -55,34 +35,28 @@ margin-top:5px;
 
 <body>
 
-<div class="header">
-Blevic Superstore Products
-</div>
+<h2>Blevic Superstore Products</h2>
 
-<div class="products">
+<div class="product">
 
-<div class="card">
+<img src="https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png" width="120">
 
-<img src="https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png">
-
-<h4>Eva Soap Pack</h4>
+<h3>Eva Soap Pack</h3>
 
 <p>₦500</p>
 
-<button onclick="addToCart('Eva Soap Pack',500)">
-Add to Cart
+<button onclick="orderProduct()">
+Add To Cart
 </button>
-
-</div>
 
 </div>
 
 <script>
 
-function addToCart(name,price){
+function orderProduct(){
 
-localStorage.setItem("productName",name)
-localStorage.setItem("productPrice",price)
+localStorage.setItem("productName","Eva Soap Pack")
+localStorage.setItem("productPrice","500")
 
 window.location.href="cart.html"
 
