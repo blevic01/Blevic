@@ -1,136 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blessings Superstore - Products</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #ff6600;
-      color: white;
-      text-align: center;
-      padding: 15px 0;
-      font-size: 22px;
-    }
-    .search-container {
-      text-align: center;
-      margin: 15px 0;
-    }
-    .search-container input {
-      width: 80%;
-      max-width: 300px;
-      padding: 8px 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    .products-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 15px;
-      gap: 15px;
-    }
-    .product-card {
-      background: white;
-      border-radius: 10px;
-      padding: 10px;
-      width: 180px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      text-align: center;
-    }
-    .product-card img {
-      width: 100%;
-      border-radius: 10px;
-    }
-    .product-card h3 {
-      font-size: 16px;
-      margin: 8px 0 5px;
-    }
-    .product-card p {
-      margin: 5px 0;
-      color: #333;
-    }
-    .product-card button {
-      background: #ff6600;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .product-card button:hover {
-      background: #e65c00;
-    }
-    .back-home {
-      display: block;
-      text-align: center;
-      margin: 20px 0;
-      text-decoration: none;
-      color: #ff6600;
-      font-weight: bold;
-    }
-  </style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Products</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f2f2f2;
+}
+
+.header{
+background:#ff9900;
+color:white;
+padding:12px;
+text-align:center;
+font-weight:bold;
+}
+
+.products{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.card{
+background:white;
+margin:10px;
+padding:10px;
+width:160px;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+.card img{
+width:100%;
+}
+
+button{
+background:#ff6600;
+border:none;
+padding:8px;
+color:white;
+margin-top:5px;
+}
+
+</style>
+
 </head>
+
 <body>
-  <header>
-    Blessings Superstore - Products
-  </header>
 
-  <!-- Search Bar -->
-  <div class="search-container">
-    <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()">
-  </div>
+<div class="header">
+Blevic Superstore Products
+</div>
 
-  <div class="products-container" id="productsContainer">
-    <!-- Product 1 -->
-    <div class="product-card">
-      <img src="https://i.postimg.cc/L5B7XWgp/images.jpg" alt="Eva Soap Pack">
-      <h3>Eva Soap Pack</h3>
-      <p>₦2500</p>
-      <button onclick="addToCart('Eva Soap Pack', 500)">Add to Cart</button>
-    </div>
+<div class="products">
 
-    <!-- Product 2 -->
-    <div class="product-card">
-      <img src="images/another-product.jpg" alt="Product 2">
-      <h3>Another Product</h3>
-      <p>₦1200</p>
-      <button onclick="addToCart('Another Product', 1200)">Add to Cart</button>
-    </div>
+<div class="card">
 
-    <!-- Add more products here -->
-  </div>
+<img src="https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png">
 
-  <a href="index.html" class="back-home">← Back to Home</a>
+<h4>Eva Soap Pack</h4>
 
-  <script>
-    function addToCart(name, price) {
-      alert(name + " has been added to your cart! Price: ₦" + price);
-      // Later, you can connect this to your real cart system
-    }
+<p>₦500</p>
 
-    function searchProducts() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const products = document.querySelectorAll('.product-card');
+<button onclick="addToCart('Eva Soap Pack',500)">
+Add to Cart
+</button>
 
-      products.forEach(product => {
-        const title = product.querySelector('h3').textContent.toLowerCase();
-        if (title.includes(input)) {
-          product.style.display = 'block';
-        } else {
-          product.style.display = 'none';
-        }
-      });
-    }
-  </script>
+</div>
+
+</div>
+
+<script>
+
+function addToCart(name,price){
+
+localStorage.setItem("productName",name)
+localStorage.setItem("productPrice",price)
+
+window.location.href="cart.html"
+
+}
+
+</script>
+
 </body>
 </html>
