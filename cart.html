@@ -4,7 +4,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Cart</title>
+<title>Cart - Blevic Superstore</title>
 
 <style>
 
@@ -33,6 +33,7 @@ padding:10px;
 background:#28a745;
 border:none;
 color:white;
+margin-top:10px;
 }
 
 </style>
@@ -51,19 +52,35 @@ Blevic Superstore Cart
 
 <p id="price"></p>
 
-<button onclick="location.href='payment.html'">
-Proceed to Payment
-</button>
+<p id="empty"></p>
+
+<button onclick="clearCart()">Clear Cart</button>
 
 </div>
 
 <script>
 
-document.getElementById("product").innerText =
-localStorage.getItem("productName")
+let product = localStorage.getItem("productName")
+let price = localStorage.getItem("productPrice")
 
-document.getElementById("price").innerText =
-"₦"+localStorage.getItem("productPrice")
+if(product && price){
+
+document.getElementById("product").innerText = product
+document.getElementById("price").innerText = "₦" + price
+
+}else{
+
+document.getElementById("empty").innerText =
+"Your cart is empty"
+
+}
+
+function clearCart(){
+
+localStorage.clear()
+location.reload()
+
+}
 
 </script>
 
