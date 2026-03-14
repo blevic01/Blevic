@@ -1,71 +1,85 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Blessings Superstore</title>
+<title>Blevic Superstore</title>
 
 <style>
 
 body{
 margin:0;
-padding:0;
 font-family:Arial;
-
-/* Your background image */
 background-image:url("https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png");
-
-/* Makes image fit phone */
-background-size:100% 100%;
+background-size:cover;
 background-position:center;
-background-repeat:no-repeat;
-height:100vh;
 }
 
-/* Dark overlay */
-.overlay{
-background:rgba(0,0,0,0.5);
-height:100%;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
+/* TOP BAR */
+
+.header{
+background:#ff9900;
+padding:12px;
 color:white;
+font-size:20px;
+text-align:center;
+font-weight:bold;
 }
 
-/* Title */
-h1{
-font-size:28px;
-margin-bottom:10px;
+/* NAVIGATION LIKE JUMIA */
+
+.nav{
+display:flex;
+justify-content:space-around;
+background:white;
+padding:10px;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
 }
 
-/* Buttons */
-button{
-padding:10px 18px;
-margin:6px;
+.nav button{
 border:none;
-border-radius:6px;
-font-size:16px;
-background:#ff6600;
+background:none;
+font-size:14px;
+font-weight:bold;
+}
+
+/* FLOATING BUTTONS */
+
+.floating{
+position:fixed;
+right:20px;
+width:55px;
+height:55px;
+border-radius:50%;
+border:none;
+font-size:22px;
 color:white;
 cursor:pointer;
 }
 
-button:hover{
-background:#e65c00;
+.games{
+bottom:90px;
+background:#ff6600;
+}
+
+.chat{
+bottom:20px;
+background:#28a745;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="overlay">
+<div class="header">
+Blevic Superstore
+</div>
 
-<h1>Welcome To Blessings Superstore</h1>
+<div class="nav">
 
 <button onclick="location.href='product.html'">Products</button>
 
@@ -75,11 +89,19 @@ background:#e65c00;
 
 <button onclick="location.href='signup.html'">Sign Up</button>
 
-<button onclick="location.href='games.html'">Games</button>
-
-<button onclick="location.href='customer-care.html'">Customer Care</button>
+<button onclick="location.href='account.html'">Account</button>
 
 </div>
+
+<!-- FLOATING BUTTONS -->
+
+<button class="floating games" onclick="location.href='games.html'">
+🎮
+</button>
+
+<button class="floating chat" onclick="location.href='chat.html'">
+💬
+</button>
 
 </body>
 </html>
