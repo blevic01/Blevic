@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,62 +12,50 @@
 body{
 margin:0;
 padding:0;
-font-family:Arial, sans-serif;
+font-family:Arial;
 
-/* BACKGROUND IMAGE */
+/* Your background image */
 background-image:url("https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png");
-background-size:cover;
+
+/* Makes image fit phone */
+background-size:100% 100%;
 background-position:center;
 background-repeat:no-repeat;
-background-attachment:fixed;
+height:100vh;
 }
 
-/* DARK OVERLAY FOR READABILITY */
+/* Dark overlay */
 .overlay{
 background:rgba(0,0,0,0.5);
-height:100vh;
-width:100%;
+height:100%;
 display:flex;
 flex-direction:column;
-align-items:center;
 justify-content:center;
+align-items:center;
 text-align:center;
 color:white;
 }
 
-/* TITLE */
+/* Title */
 h1{
-font-size:40px;
+font-size:28px;
 margin-bottom:10px;
 }
 
-/* SUB TEXT */
-p{
-font-size:18px;
-margin-bottom:30px;
-}
-
-/* BUTTON STYLE */
+/* Buttons */
 button{
-padding:12px 20px;
-margin:8px;
+padding:10px 18px;
+margin:6px;
 border:none;
 border-radius:6px;
 font-size:16px;
-cursor:pointer;
 background:#ff6600;
 color:white;
+cursor:pointer;
 }
 
 button:hover{
 background:#e65c00;
-}
-
-/* BUTTON CONTAINER */
-.buttons{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
 }
 
 </style>
@@ -76,11 +65,7 @@ justify-content:center;
 
 <div class="overlay">
 
-<h1>Welcome to Blessings Superstore</h1>
-
-<p>Your One-Stop Shop for Everyday Essentials</p>
-
-<div class="buttons">
+<h1>Welcome To Blessings Superstore</h1>
 
 <button onclick="location.href='product.html'">Products</button>
 
@@ -93,8 +78,6 @@ justify-content:center;
 <button onclick="location.href='games.html'">Games</button>
 
 <button onclick="location.href='customer-care.html'">Customer Care</button>
-
-</div>
 
 </div>
 
