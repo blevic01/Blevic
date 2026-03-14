@@ -1,29 +1,136 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>Products</title>
-<link rel="stylesheet" href="style.css">
-<script src="script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blessings Superstore - Products</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #ff6600;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 22px;
+    }
+    .search-container {
+      text-align: center;
+      margin: 15px 0;
+    }
+    .search-container input {
+      width: 80%;
+      max-width: 300px;
+      padding: 8px 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    .products-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 15px;
+      gap: 15px;
+    }
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      width: 180px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .product-card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .product-card h3 {
+      font-size: 16px;
+      margin: 8px 0 5px;
+    }
+    .product-card p {
+      margin: 5px 0;
+      color: #333;
+    }
+    .product-card button {
+      background: #ff6600;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .product-card button:hover {
+      background: #e65c00;
+    }
+    .back-home {
+      display: block;
+      text-align: center;
+      margin: 20px 0;
+      text-decoration: none;
+      color: #ff6600;
+      font-weight: bold;
+    }
+  </style>
 </head>
-
 <body>
+  <header>
+    Blessings Superstore - Products
+  </header>
 
-<h2>Products</h2>
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()">
+  </div>
 
-<div class="product">
+  <div class="products-container" id="productsContainer">
+    <!-- Product 1 -->
+    <div class="product-card">
+      <img src="https://i.postimg.cc/L5B7XWgp/images.jpg" alt="Eva Soap Pack">
+      <h3>Eva Soap Pack</h3>
+      <p>₦2500</p>
+      <button onclick="addToCart('Eva Soap Pack', 500)">Add to Cart</button>
+    </div>
 
-<img src="https://picsum.photos/200">
+    <!-- Product 2 -->
+    <div class="product-card">
+      <img src="images/another-product.jpg" alt="Product 2">
+      <h3>Another Product</h3>
+      <p>₦1200</p>
+      <button onclick="addToCart('Another Product', 1200)">Add to Cart</button>
+    </div>
 
-<h3>Phone</h3>
+    <!-- Add more products here -->
+  </div>
 
-<p>₦120000</p>
+  <a href="index.html" class="back-home">← Back to Home</a>
 
-<button onclick="addCart('Phone',120000,'https://picsum.photos/200')">
-Add to Cart
-</button>
+  <script>
+    function addToCart(name, price) {
+      alert(name + " has been added to your cart! Price: ₦" + price);
+      // Later, you can connect this to your real cart system
+    }
 
-</div>
+    function searchProducts() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const products = document.querySelectorAll('.product-card');
 
+      products.forEach(product => {
+        const title = product.querySelector('h3').textContent.toLowerCase();
+        if (title.includes(input)) {
+          product.style.display = 'block';
+        } else {
+          product.style.display = 'none';
+        }
+      });
+    }
+  </script>
 </body>
 </html>
