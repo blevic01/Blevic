@@ -3,200 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blevic store</title>
+
+<title>Blessings Superstore</title>
+
 <style>
-body {
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#000;
-    color:#fff;
-    text-align:center;
+
+body{
+margin:0;
+padding:0;
+font-family:Arial, sans-serif;
+
+/* BACKGROUND IMAGE */
+background-image:url("https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+background-attachment:fixed;
 }
-header {
-    background:#ff9900;
-    padding:15px;
-    font-size:20px;
-    font-weight:bold;
+
+/* DARK OVERLAY FOR READABILITY */
+.overlay{
+background:rgba(0,0,0,0.5);
+height:100vh;
+width:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:white;
 }
-#username {
-    color:#000;
+
+/* TITLE */
+h1{
+font-size:40px;
+margin-bottom:10px;
 }
-.main-buttons {
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:10px;
-    padding:20px;
+
+/* SUB TEXT */
+p{
+font-size:18px;
+margin-bottom:30px;
 }
-.main-buttons button {
-    background:#ff9900;
-    color:#000;
-    border:none;
-    padding:12px 15px;
-    border-radius:8px;
-    font-size:16px;
-    cursor:pointer;
-    width:45%;
-    max-width:180px;
+
+/* BUTTON STYLE */
+button{
+padding:12px 20px;
+margin:8px;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+background:#ff6600;
+color:white;
 }
-.floating-games {
-    position: fixed;
-    bottom:20px;
-    right:20px;
-    background:#ff9900;
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    font-size:24px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+
+button:hover{
+background:#e65c00;
 }
-#games-menu {
-    display:none;
-    position: fixed;
-    bottom:90px;
-    right:20px;
-    background:#222;
-    padding:10px;
-    border-radius:10px;
-    flex-direction: column;
-    gap:10px;
-    width:150px;
+
+/* BUTTON CONTAINER */
+.buttons{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
 }
-#games-menu button {
-    background:#ff9900;
-    color:#000;
-    border:none;
-    padding:10px;
-    border-radius:6px;
-    font-size:14px;
-    cursor:pointer;
-    width:100%;
-}
+
 </style>
 </head>
+
 <body>
 
-<header>
-    Welcome <span id="username">Guest</span>
-</header>
+<div class="overlay">
 
-<div class="main-buttons">
-    <button onclick="location.href='login.html'">Login</button>
-    <button onclick="location.href='signup.html'">Sign Up</button>
-    <button onclick="location.href='products.html'">Products</button>
-    <button onclick="location.href='cart.html'">Cart</button>
-    <button onclick="location.href='orders.html'">Orders</button>
-    <button onclick="location.href='payment.html'">Payment</button>
-    <button onclick="location.href='track.html'">Track Order</button>
-    <button onclick="location.href='chat.html'">Customer Care</button>
-    <button onclick="account()">Account</button>
+<h1>Welcome to Blessings Superstore</h1>
+
+<p>Your One-Stop Shop for Everyday Essentials</p>
+
+<div class="buttons">
+
+<button onclick="location.href='product.html'">Products</button>
+
+<button onclick="location.href='cart.html'">Cart</button>
+
+<button onclick="location.href='login.html'">Login</button>
+
+<button onclick="location.href='signup.html'">Sign Up</button>
+
+<button onclick="location.href='games.html'">Games</button>
+
+<button onclick="location.href='customer-care.html'">Customer Care</button>
+
 </div>
 
-<!-- Floating games button -->
-<div class="floating-games" onclick="toggleGames()">🎮</div>
-<div id="games-menu">
-    <button onclick="location.href='snake.html'">Snake</button>
-    <button onclick="location.href='freefire.html'">Free Fire</button>
-    <button onclick="location.href='squidgame.html'">Squid Game</button>
-    <button onclick="location.href='xo.html'">X & O</button>
-    <button onclick="location.href='mystery.html'">Mystery Game</button>
 </div>
-
-<script>
-// Floating games menu toggle
-function toggleGames(){
-    const menu = document.getElementById("games-menu");
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-    menu.style.flexDirection = "column";
-}
-
-// Login simulation (for account display)
-function account(){
-    const current = document.getElementById("username").innerText;
-    if(current==="Guest"){
-        alert("❌ Please login first!");
-    } else {
-        alert(`Account: ${current}\nLevel: Beginner\nPoints: 0`);
-    }
-}
-
-// Example simple login (can be replaced by real login system)
-function login(){
-    const name = prompt("Enter your name to login:");
-    if(name && name.trim()!==""){
-        document.getElementById("username").innerText = name;
-        alert(`✅ You have been logged in, ${name}!`);
-    }
-}
-</script>
 
 </body>
 </html>
-<div id="welcome-banner">
-  <h1>Welcome to <span>Blevic Superstore</span>!</h1>
-  <p>Your one-stop shop for everything you need 🎉</p>
-</div>
-
-<style>
-#welcome-banner {
-    background: linear-gradient(90deg, #ff9900, #ffcc00);
-    color: #000;
-    padding: 25px 15px;
-    margin: 15px auto;
-    max-width: 400px;
-    border-radius: 15px;
-    box-shadow: 0 0 15px rgba(255,153,0,0.7);
-    font-family: Arial, sans-serif;
-    text-align: center;
-    animation: slideDown 1s ease-out;
-}
-
-#welcome-banner h1 {
-    font-size: 22px;
-    margin: 0 0 10px 0;
-}
-
-#welcome-banner h1 span {
-    color: #fff;
-    text-shadow: 1px 1px 5px #000;
-}
-
-#welcome-banner p {
-    font-size: 16px;
-    margin: 0;
-}
-
-@keyframes slideDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-@media (max-width: 500px) {
-    #welcome-banner {
-        max-width: 90%;
-        padding: 20px 10px;
-    }
-    #welcome-banner h1 {
-        font-size: 18px;
-    }
-    #welcome-banner p {
-        font-size: 14px;
-    }
-}
-</style>
-<style>
-body{
-  margin:0;
-  padding:0;
-  font-family: Arial, sans-serif;
-
-  background-image: url("https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-</style>
