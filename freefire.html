@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Free Fire 3D Shooting Game</title>
+<style>
+body { margin:0; overflow:hidden; background:#87ceeb; }
+canvas { display:block; }
+#score {
+    position: absolute; top:10px; left:10px;
+    color: #ff9900; font-size: 20px; font-family: Arial;
+}
+.back-home {
+    position: absolute; top:10px; right:10px;
+    background:#ff9900; color:white; padding:10px 15px; text-decoration:none; border-radius:6px;
+}
+</style>
+</head>
+<body>
+
+<div id="score">Score: 0</div>
+<a href="index.html" class="back-home">🏠 Back to Home</a>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/PointerLockControls.js"></script>
+
+<script>
+let scene, camera, renderer, controls;
+let bullets = [];
+let targets = [];
+let score = 0;
+
+// Scene
+scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87ceeb);
+
+// Camera
+camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.y = 2;
+
+// Renderer
+renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// Controls
+controls = new THREE.PointerLockControls(camera, document.body);
+document.body.addEventListener('click', () => controls.lock());
+
+// Floor
+const floorGeo = new THREE.PlaneGeometry(100,100);
+const floorMat = new THREE.MeshPhongMaterial({color:0x228B22});
+const floor = new THREE.Mesh(floorGeo, floorMat);
+floor.rotation.x = -Math.PI/2;
+scene.add(floor);
+
+// Lighting
+const light = new THREE.DirectionalLight(0xffffff,1);
+light.position.set(10,20,10);
+scene.add(light);
+
+// Player shooting
+window.addEventListener("click", shoot);
+
+function shoot(){
+    const geometry = new THREE.SphereGeometry(0.1,8,8);
+    const material = new THREE.MeshBasicMaterial({color:0xff0000});
+    const bullet = new THREE.Mesh(geometry, material);
+    bullet.position.copy(camera.position);
+    bullet.velocity = new THREE.Vector3(0,0,-1);
+    bullet.velocity.applyQuaternion(camera.quaternion);
+    bullets.push(bullet);
+    scene.add(bullet);
+}
+
+// Create targets (bottles + humans)
+function createTarget(){
+    const type = Math.random() > 0.5 ? "bottle" : "human";
+
+    let geometry;
+    let material;
+
+    if(type==="bottle"){
+        geometry = new THREE.CylinderGeometry(0.2,0.2,0.5,8);
+        material = new THREE.MeshPhongMaterial({color:0x00ff00});
+    } else {
+        geometry = new THREE.BoxGeometry(0.5,1.5,0.5);
+        material = new THREE.MeshPhongMaterial({color:0xff0000});
+    }
+
+    const target = new THREE.Mesh(geometry, material);
+    target.position.set(Math.random()*50-25, geometry.parameters.height/2, Math.random()*50-25);
+    target.health = 1;
+    target.type = type;
+    targets.push(target);
+    scene.add(target);
+}
+
+// Spawn 10 targets
+for(let i=0;i<10;i++) createTarget();
+
+// Move targets randomly (human-like)
+function moveTargets(){
+    targets.forEach(t=>{
+        if(t.type==="human"){
+            t.position.x += (Math.random()-0.5)*0.1;
+            t.position.z += (Math.random()-0.5)*0.1;
+        }
+    });
+}
+
+// Movement keys
+const keys = {};
+window.addEventListener("keydown", e=>keys[e.key]=true);
+window.addEventListener("keyup", e=>keys[e.key]=false);
+
+function movePlayer(){
+    const speed = 0.2;
+    if(keys["w"] || keys["ArrowUp"]) controls.moveForward(speed);
+    if(keys["s"] || keys["ArrowDown"]) controls.moveForward(-speed);
+    if(keys["a"] || keys["ArrowLeft"]) controls.moveRight(-speed);
+    if(keys["d"] || keys["ArrowRight"]) controls.moveRight(speed);
+}
+
+// Animate
+function animate(){
+    requestAnimationFrame(animate);
+    movePlayer();
+    moveTargets();
+
+    // Update bullets
+    bullets.forEach((b,i)=>{
+        b.position.add(b.velocity.clone().multiplyScalar(0.5));
+        targets.forEach((t,j)=>{
+            if(t && b.position.distanceTo(t.position)<0.5){
+                scene.remove(t);
+                targets.splice(j,1);
+                scene.remove(b);
+                bullets.splice(i,1);
+                score++;
+                document.getElementById("score").innerText = "Score: " + score;
+            }
+        });
+    });
+
+    // Respawn targets
+    if(targets.length<10) createTarget();
+
+    renderer.render(scene, camera);
+}
+
+animate();
+</script>
+
+</body>
+</html>

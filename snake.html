@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Snake Game - Hard</title>
+<style>
+body { background:#000; color:white; text-align:center; font-family:Arial; }
+canvas { background:#111; display:block; margin:20px auto; border:2px solid #ff9900; }
+.back-home { display:block; margin:15px auto; background:#ff9900; color:white; padding:10px 15px; border-radius:6px; text-align:center; text-decoration:none; width:120px;}
+.controls { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); }
+.controls button { width:60px; height:60px; margin:5px; font-size:24px; border:none; border-radius:10px; background:#ff9900; color:white; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<h1 style="color:#ff9900;">Snake Game - Hard</h1>
+<canvas id="game" width="300" height="300"></canvas>
+
+<!-- On-screen controls -->
+<div class="controls">
+    <div>
+        <button onclick="setDirection(0,-1)">↑</button>
+    </div>
+    <div>
+        <button onclick="setDirection(-1,0)">←</button>
+        <button onclick="setDirection(1,0)">→</button>
+    </div>
+    <div>
+        <button onclick="setDirection(0,1)">↓</button>
+    </div>
+</div>
+
+<a href="index.html" class="back-home">🏠 Back to Home</a>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const scale = 15;
+const rows = canvas.height/scale;
+const columns = canvas.width/scale;
+
+let snake = [{x:10, y:10}];
+let direction = {x:0, y:0};
+let fruit = {};
+let score = 0;
+let started = false;
+
+function placeFruit(){
+    fruit = {x: Math.floor(Math.random()*columns), y: Math.floor(Math.random()*rows)};
+}
+placeFruit();
+
+function setDirection(x,y){
+    if(x !== -direction.x || y !== -direction.y){
+        direction = {x:x, y:y};
+        started = true; // start game after first move
+    }
+}
+
+function update(){
+    if(!started) return; // wait for player to start
+    const head = {x: snake[0].x + direction.x, y: snake[0].y + direction.y};
+
+    // Wall collision
+    if(head.x < 0 || head.x >= columns || head.y < 0 || head.y >= rows){
+        alert("Game Over! Score: "+score);
+        snake = [{x:10, y:10}];
+        direction={x:0,y:0};
+        score=0;
+        started=false;
+        placeFruit();
+        return;
+    }
+
+    // Self collision
+    for(let s of snake){
+        if(head.x===s.x && head.y===s.y){
+            alert("Game Over! Score: "+score);
+            snake = [{x:10, y:10}];
+            direction={x:0,y:0};
+            score=0;
+            started=false;
+            placeFruit();
+            return;
+        }
+    }
+
+    snake.unshift(head);
+
+    // Eat fruit
+    if(head.x===fruit.x && head.y===fruit.y){
+        score++;
+        placeFruit();
+    } else {
+        snake.pop();
+    }
+}
+
+function draw(){
+    ctx.fillStyle="black";
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    ctx.fillStyle="lime";
+    for(let s of snake){
+        ctx.fillRect(s.x*scale, s.y*scale, scale, scale);
+    }
+
+    ctx.fillStyle="red";
+    ctx.fillRect(fruit.x*scale, fruit.y*scale, scale, scale);
+
+    ctx.fillStyle="white";
+    ctx.fillText("Score: "+score,10,10);
+}
+
+function gameLoop(){
+    update();
+    draw();
+}
+
+// Fast speed = harder
+setInterval(gameLoop, 80);
+
+// Optional: keyboard support
+window.addEventListener("keydown", e => {
+    switch(e.key){
+        case "ArrowUp": setDirection(0,-1); break;
+        case "ArrowDown": setDirection(0,1); break;
+        case "ArrowLeft": setDirection(-1,0); break;
+        case "ArrowRight": setDirection(1,0); break;
+    }
+});
+</script>
+
+</body>
+</html>

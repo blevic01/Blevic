@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Payment</title>
+<script src="order.js"></script>
+</head>
+
+<body>
+
+<h2>Payment</h2>
+
+<h3>Bank Transfer</h3>
+
+<p>Bank: OPAY</p>
+
+<p>Account Number: 07081121045</p>
+
+<button onclick="placeOrder()">I Have Paid</button>
+
+<hr>
+
+<h3>Pay Online</h3>
+
+<button onclick="payWithPaystack()">Pay with Paystack</button>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<script>
+
+function payWithPaystack(){
+
+let handler = PaystackPop.setup({
+
+key: "YOUR_PUBLIC_KEY",
+
+email: "customer@email.com",
+
+amount: 5000 * 100,
+
+currency: "NGN",
+
+callback: function(response){
+
+alert("Payment Successful");
+
+placeOrder();
+
+}
+
+});
+
+handler.openIframe();
+
+}
+
+</script>
+
+</body>
+</html>

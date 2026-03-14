@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sign Up</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Create Account</h2>
+
+<input id="name" placeholder="Name"><br>
+<input id="email" placeholder="Email"><br>
+<input id="password" placeholder="Password" type="password"><br>
+<button onclick="signup()">Sign Up</button>
+
+<p>
+Already have an account? <a href="login.html">Login</a>
+</p>
+
+<script>
+function signup(){
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  if(!name || !email || !password){
+    alert("Please fill all fields");
+    return;
+  }
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  // Check if email exists
+  if(users.find(u=>u.email===email)){
+    alert("Email already exists");
+    return;
+  }
+
+  users.push({name,email,password});
+  localStorage.setItem("users",JSON.stringify(users));
+  alert("Account created successfully!");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

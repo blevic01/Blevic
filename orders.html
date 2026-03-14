@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Track Order</title>
+<style>
+button{
+padding:10px;
+margin:10px;
+background:orange;
+border:none;
+color:white;
+cursor:pointer;
+}
+.call-btn{
+background:green;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Track Your Order</h2>
+
+<input id="id" placeholder="Enter Order ID">
+
+<button onclick="track()">Track</button>
+
+<p id="status"></p>
+
+<div id="order-details"></div>
+<div id="options"></div>
+
+<script>
+
+// Track order by ID
+function track(){
+
+let id=document.getElementById("id").value;
+
+let orders=JSON.parse(localStorage.getItem("orders")) || [];
+
+let found=false;
+
+orders.forEach(o=>{
+
+if(o.id==id){
+
+found=true;
+
+document.getElementById("status").innerText="Status: Processing...";
+
+displayOrder(o);
+
+setTimeout(()=>{showOptions();},3000);
+
+}
+
+});
+
+if(!found){
+document.getElementById("status").innerText="Order not found";
+document.getElementById("order-details").innerHTML="";
+document.getElementById("options").innerHTML="";
+}
+
+}
+
+// Show products and total
+function displayOrder(order){
+let container=document.getElementById("order-details");
+container.innerHTML="<h3>Order Details</h3>";
+
+let total=0;
+
+order.items.forEach(item=>{
+container.innerHTML+=`
+<p>${item.name} - ₦${item.price} x ${item.qty || 1} = ₦${item.price*(item.qty||1)}</p>
+`;
+total+=item.price*(item.qty||1);
+});
+
+container.innerHTML+=`<p><b>Total: ₦${total}</b></p>`;
+}
+
+// Show delivery/pickup options
+function showOptions(){
+document.getElementById("status").innerText="Your order is ready";
+
+document.getElementById("options").innerHTML=
+`
+<button onclick="deliver()">Deliver on Door</button>
+<button onclick="pickup()">I Will Come and Take It</button>
+`;
+}
+
+// Delivery on door
+function deliver(){
+let address=prompt("Enter your address");
+if(address){
+let message="Hello, I want this market delivered to: "+address;
+let url="https://wa.me/2348032390904?text="+encodeURIComponent(message);
+window.open(url);
+}
+}
+
+// Pickup at shop
+function pickup(){
+document.getElementById("options").innerHTML=
+`
+<p>Pickup Address:</p>
+<p><b>Number 12 Ogundare Street</b></p>
+<a href="tel:08032390904">
+<button class="call-btn">Call Seller</button>
+</a>
+`;
+}
+
+</script>
+
+</body>
+</html>

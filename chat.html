@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Customer Care</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { font-family: Arial; background: #f2f2f2; text-align:center; }
+h1 { color:#ff9900; margin-top:20px; }
+#chat-box { width:90%; max-width:500px; height:250px; border:1px solid #ccc; background:white; margin:15px auto; padding:10px; overflow:auto; border-radius:10px; text-align:left;}
+#user-msg { width:70%; padding:5px; margin-top:10px; }
+button { padding:8px 12px; margin-left:5px; background:#ff9900; color:white; border:none; border-radius:6px; cursor:pointer;}
+.back-home { display:block; margin:15px auto; background:#ff9900; color:white; padding:10px 15px; border-radius:6px; text-decoration:none; width:120px; text-align:center;}
+</style>
+</head>
+<body>
+
+<h1>Customer Care Chat</h1>
+
+<div id="chat-box"></div>
+<input type="text" id="user-msg" placeholder="Type your message">
+<button onclick="sendMessage()">Send</button>
+
+<a href="index.html" class="back-home">🏠 Back to Home</a>
+
+<script>
+function sendMessage(){
+    let userMsg = document.getElementById("user-msg").value;
+    if(!userMsg) return;
+
+    let chatBox = document.getElementById("chat-box");
+    chatBox.innerHTML += `<p><b>You:</b> ${userMsg}</p>`;
+
+    // Simple AI responses
+    let response = "Sorry, I didn't understand. Please ask about our store, products, or games.";
+    userMsg = userMsg.toLowerCase();
+
+    if(userMsg.includes("buy") || userMsg.includes("how to buy")){
+        response = "To buy a product, go to Shop Products, add to cart, then checkout using payment options.";
+    } else if(userMsg.includes("games")){
+        response = "Click the 🎮 Games button on the homepage to access Free Fire, Snake, X & O, Squid Game, and Mystery Game.";
+    } else if(userMsg.includes("points") || userMsg.includes("level")){
+        response = "You earn points from buying products or playing games. Your level increases as you earn more points.";
+    } else if(userMsg.includes("contact")){
+        response = "You can contact us here or call 0803 239 0904 for inquiries.";
+    }
+
+    chatBox.innerHTML += `<p><b>AI:</b> ${response}</p>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+    document.getElementById("user-msg").value = "";
+}
+</script>
+
+</body>
+</html>

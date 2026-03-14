@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Squid Game - Hard</title>
+<style>
+body { margin:0; font-family:Arial; text-align:center; background:#000; color:#fff; }
+#gameCanvas { background:#222; display:block; margin:20px auto; border:3px solid #ff9900; }
+#status { margin-top:10px; font-size:20px; color:#ff9900; }
+.back-home { display:block; margin:15px auto; background:#ff9900; color:white; padding:10px 15px; border-radius:6px; text-align:center; text-decoration:none; width:120px;}
+</style>
+</head>
+<body>
+
+<h1>Squid Game: Red Light / Green Light</h1>
+<canvas id="gameCanvas" width="500" height="300"></canvas>
+<p id="status">Green Light! Move now!</p>
+<a href="index.html" class="back-home">🏠 Back to Home</a>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+// Player
+let player = {x:50, y:canvas.height/2-15, width:20, height:30};
+let isDragging = false;
+
+// AI Humans
+let humans = [];
+for(let i=0;i<5;i++){
+    humans.push({x:Math.random()*400+50, y:50*i+20, width:20, height:30, dx:(Math.random()-0.5)*2});
+}
+
+// Red/Green Light
+let greenLight = true;
+
+// Handle mouse/finger dragging
+canvas.addEventListener("mousedown", ()=>isDragging=true);
+canvas.addEventListener("mouseup", ()=>isDragging=false);
+canvas.addEventListener("mousemove", (e)=>{
+    if(isDragging && greenLight) player.x = e.offsetX - player.width/2;
+});
+canvas.addEventListener("touchstart", ()=>isDragging=true);
+canvas.addEventListener("touchend", ()=>isDragging=false);
+canvas.addEventListener("touchmove", (e)=>{
+    e.preventDefault();
+    if(isDragging && greenLight){
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        player.x = touch.clientX - rect.left - player.width/2;
+    }
+},{passive:false});
+
+// Red/Green Light toggling
+function toggleLight(){
+    greenLight = Math.random() > 0.5;
+    document.getElementById("status").innerText = greenLight ? "Green Light! Move now!" : "Red Light! Don't move!";
+    setTimeout(toggleLight, Math.random()*2000+1000); // 1-3 seconds
+}
+toggleLight();
+
+// Draw function
+function draw(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+
+    // Draw player
+    ctx.fillStyle = "#00ff00";
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+
+    // Draw humans
+    ctx.fillStyle = "#ff0000";
+    humans.forEach(h=>{
+        h.x += h.dx;
+        if(h.x<0 || h.x>canvas.width-h.width) h.dx*=-1;
+        ctx.fillRect(h.x, h.y, h.width, h.height);
+    });
+}
+
+// Check if player moved during Red Light
+let lastX = player.x;
+function checkRules(){
+    if(!greenLight && player.x !== lastX){
+        alert("💀 Caught moving during Red Light! Resetting...");
+        player.x = 50; // reset
+    }
+    lastX = player.x;
+}
+
+// Game loop
+function gameLoop(){
+    draw();
+    checkRules();
+    requestAnimationFrame(gameLoop);
+}
+gameLoop();
+</script>
+
+</body>
+</html>

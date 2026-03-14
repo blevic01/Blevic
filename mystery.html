@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mystery Game - Randomized</title>
+<style>
+body{text-align:center;font-family:Arial;}
+input{padding:10px; margin:5px;}
+button{padding:10px 15px; margin:10px; background:#ff9900; color:white; border:none; border-radius:6px; cursor:pointer;}
+.back-home { display:block; margin:15px auto; background:#ff9900; color:white; padding:10px 15px; border-radius:6px; text-align:center; text-decoration:none; width:120px;}
+</style>
+</head>
+<body>
+
+<h1>Mystery Game: Guess the Number</h1>
+<p id="question"></p>
+<input id="guess" type="number">
+<button onclick="checkGuess()">Guess</button>
+<p id="result"></p>
+<a href="index.html" class="back-home">🏠 Back to Home</a>
+
+<script>
+let min = 1;
+let max = Math.floor(Math.random()*50)+10; // random max 10–60 for variety
+let attempts = 3;
+let answer = Math.floor(Math.random()*(max-min+1))+min;
+
+function newGame(){
+    min = 1;
+    max = Math.floor(Math.random()*50)+10;
+    attempts = 3;
+    answer = Math.floor(Math.random()*(max-min+1))+min;
+    document.getElementById("question").innerText = `Guess a number between ${min} and ${max}. You have ${attempts} attempts.`;
+    document.getElementById("result").innerText = "";
+    document.getElementById("guess").value = "";
+}
+
+function checkGuess(){
+    let g = parseInt(document.getElementById("guess").value);
+    if(isNaN(g)){ alert("Enter a number!"); return; }
+
+    attempts--;
+
+    if(g===answer){
+        document.getElementById("result").innerText = `🎉 Correct! The answer was ${answer}. Starting new game...`;
+        setTimeout(newGame, 2000);
+    } else if(attempts>0){
+        document.getElementById("result").innerText = `❌ Wrong! Attempts left: ${attempts}`;
+    } else {
+        document.getElementById("result").innerText = `💀 Game Over! The answer was ${answer}. Starting new game...`;
+        setTimeout(newGame, 2000);
+    }
+}
+
+// Start first game
+newGame();
+</script>
+
+</body>
+</html>
