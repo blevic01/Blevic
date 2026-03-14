@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Account</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.account-container {
+    max-width: 500px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.account-container h2 {
+    text-align: center;
+    color: #ff9900;
+}
+
+.account-container p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.back-home {
+    display: block;
+    margin: 15px auto;
+    background: #ff9900;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Customer Account</h2>
+
+<div class="account-container" id="account-info">
+<!-- Account info will show here -->
+</div>
+
+<a href="index.html" class="back-home">🏠 Back to Home</a>
+
+<script>
+// Get current user info
+let user = JSON.parse(localStorage.getItem("currentUser"));
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+if(user){
+    // Count user orders
+    let userOrders = orders.filter(o => o.userEmail === user.email);
+    let totalOrders = userOrders.length;
+
+    // Calculate points: e.g., 10 points per order
+    let points = totalOrders * 10;
+
+    // Determine level
+    let level = "New";
+    if(totalOrders >= 1 && totalOrders < 5) level = "Regular";
+    if(totalOrders >= 5) level = "VIP";
+
+    document.getElementById("account-info").innerHTML = `
+        <p><b>Name:</b> ${user.name}</p>
+        <p><b>Email:</b> ${user.email}</p>
+        <p><b>Total Orders:</b> ${totalOrders}</p>
+        <p><b>Level:</b> ${level}</p>
+        <p><b>Points:</b> ${points}</p>
+        <p><b>Customer Care:</b> <a href="chat.html">💬 Chat with us</a></p>
+    `;
+}else{
+    document.getElementById("account-info").innerHTML = `<p>Please log in to see account details.</p>`;
+}
+</script>
+
+</body>
+</html>
