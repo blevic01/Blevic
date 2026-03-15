@@ -1,32 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products - Blevic Superstore</title>
+<style>
+body{font-family:Arial;margin:0;padding:0;background:#f4f4f4;}
+.header{background:#ff9900;padding:15px;text-align:center;font-size:22px;color:white;}
+.products{display:flex;flex-wrap:wrap;justify-content:center;padding:15px;gap:15px;}
+.product{background:white;padding:10px;border-radius:10px;width:160px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
+.product img{width:100%;height:120px;object-fit:cover;border-radius:5px;cursor:pointer;}
+.product button{margin-top:5px;padding:8px;background:#ff9900;color:white;border:none;border-radius:5px;width:100%;cursor:pointer;font-size:14px;}
+.rating span{cursor:pointer;color:#ccc;font-size:16px;}
+.rating span.selected{color:gold;}
+</style>
+</head>
+<body>
+
+<div class="header">🛍 Blevic Superstore Products</div>
+
+<div class="products"></div>
+
 <script>
-// Load products from admin
+// Get products from admin
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let container = document.querySelector(".products");
 container.innerHTML = "";
 
-// Display products
-products.forEach((p, index) => {
+// Display each product
+products.forEach((p,index)=>{
   container.innerHTML += `
-  <div class="product">
-    <img src="${p.img}" alt="${p.name}" onclick="showDetails(${index})">
-    <h3>${p.name}</h3>
-    <p>₦${p.price}</p>
-
-    <div class="rating" id="rating${index}">
-      <span onclick="rateProduct(${index},1)">★</span>
-      <span onclick="rateProduct(${index},2)">★</span>
-      <span onclick="rateProduct(${index},3)">★</span>
-      <span onclick="rateProduct(${index},4)">★</span>
-      <span onclick="rateProduct(${index},5)">★</span>
+    <div class="product">
+      <img src="${p.img}" alt="${p.name}" onclick="showDetails(${index})">
+      <h3>${p.name}</h3>
+      <p>₦${p.price}</p>
+      <div class="rating" id="rating${index}">
+        <span onclick="rateProduct(${index},1)">★</span>
+        <span onclick="rateProduct(${index},2)">★</span>
+        <span onclick="rateProduct(${index},3)">★</span>
+        <span onclick="rateProduct(${index},4)">★</span>
+        <span onclick="rateProduct(${index},5)">★</span>
+      </div>
+      <button onclick="addToCart(${index})">Add To Cart</button>
+      <button onclick="buyNow(${index})">Buy Now</button>
     </div>
-
-    <button onclick="addToCart(${index})">Add To Cart</button>
-    <button onclick="buyNow(${index})">Buy Now</button>
-  </div>
   `;
 });
 
-// Rating system
+// Rating function
 function rateProduct(index,value){
   let r = document.getElementById("rating"+index).children;
   for(let i=0;i<5;i++){
@@ -36,43 +56,37 @@ function rateProduct(index,value){
   alert("You rated "+products[index].name+" "+value+" stars!");
 }
 
-// Add to cart
-function addToCart(index){
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let product = products[index];
-
-  // Check if product already in cart
-  let existing = cart.find(item => item.name === product.name);
-  if(existing){
-    existing.qty += 1;
-  } else {
-    cart.push({name: product.name, price: product.price, qty: 1});
-  }
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert(product.name + " added to cart!");
-}
-
-// Open cart
-function goCart(){
-  window.location.href = "cart.html";
-}
-
-// Buy now
-function buyNow(index){
-  let cart = [];
-  let product = products[index];
-  cart.push({name: product.name, price: product.price, qty:1});
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  // Redirect to payment
-  let choice = confirm("Do you want to pay via Paystack? Press Cancel for Bank Transfer");
-  window.location.href = "payment.html";
-}
-
 // Show full product details
 function showDetails(index){
   let p = products[index];
   alert(`Product: ${p.name}\nPrice: ₦${p.price}\nImage URL: ${p.img}`);
 }
+
+// Add to cart
+function addToCart(index){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let product = products[index];
+
+  let existing = cart.find(item=>item.name===product.name);
+  if(existing){
+    existing.qty +=1;
+  } else {
+    cart.push({name: product.name, price: product.price, qty:1});
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert(product.name+" added to cart!");
+}
+
+// Buy Now
+function buyNow(index){
+  let cart = [];
+  let product = products[index];
+  cart.push({name: product.name, price: product.price, qty:1});
+  localStorage.setItem("cart", JSON.stringify(cart));
+  window.location.href="payment.html"; // go to payment page
+}
 </script>
+
+</body>
+</html>
