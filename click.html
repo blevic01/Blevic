@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Click Speed</title>
+
+<style>
+
+body{
+text-align:center;
+font-family:Arial;
+}
+
+button{
+padding:20px;
+font-size:20px;
+background:red;
+color:white;
+border:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Click As Fast As You Can</h2>
+
+<p>10 seconds challenge</p>
+
+<button onclick="clickGame()">CLICK</button>
+
+<p id="score">0</p>
+
+<script>
+
+let score=0
+let time=10
+let playing=false
+
+function clickGame(){
+
+if(!playing){
+
+playing=true
+
+setTimeout(endGame,10000)
+
+}
+
+score++
+
+document.getElementById("score").innerText=score
+
+}
+
+function endGame(){
+
+alert("Time Up! Your score: "+score)
+
+score=0
+playing=false
+
+}
+
+</script>
+
+</body>
+</html>
