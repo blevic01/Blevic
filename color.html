@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Color Match</title>
+
+<style>
+
+body{
+text-align:center;
+font-family:Arial;
+}
+
+button{
+padding:15px;
+margin:10px;
+border:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Match The Color</h2>
+
+<p id="colorName"></p>
+
+<button id="red" onclick="check('red')" style="background:red"></button>
+
+<button id="blue" onclick="check('blue')" style="background:blue"></button>
+
+<button id="green" onclick="check('green')" style="background:green"></button>
+
+<p id="result"></p>
+
+<script>
+
+let colors=["red","blue","green"]
+
+let correct=colors[Math.floor(Math.random()*3)]
+
+document.getElementById("colorName").innerText=correct
+
+function check(color){
+
+if(color==correct){
+
+document.getElementById("result").innerText="Correct!"
+
+}else{
+
+document.getElementById("result").innerText="Wrong!"
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
