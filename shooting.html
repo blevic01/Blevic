@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bottle Shooting Game</title>
+
+<style>
+
+body{
+margin:0;
+text-align:center;
+font-family:Arial;
+background:#222;
+color:white;
+}
+
+canvas{
+background:url("https://i.postimg.cc/zf0C7X6P/desert.jpg");
+background-size:cover;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Bottle Shooting Game</h2>
+<p>Tap the bottles to shoot them</p>
+
+<canvas id="game" width="350" height="500"></canvas>
+
+<p>Score: <span id="score">0</span></p>
+
+<script>
+
+let canvas=document.getElementById("game")
+let ctx=canvas.getContext("2d")
+
+let score=0
+
+let bottles=[]
+
+function createBottle(){
+
+bottles.push({
+x:Math.random()*300,
+y:500,
+speed:2+Math.random()*3
+})
+
+}
+
+setInterval(createBottle,1200)
+
+canvas.addEventListener("click",shoot)
+
+function shoot(e){
+
+let rect=canvas.getBoundingClientRect()
+
+let mx=e.clientX-rect.left
+let my=e.clientY-rect.top
+
+bottles.forEach((bottle,index)=>{
+
+if(mx>bottle.x && mx<bottle.x+30 &&
+   my>bottle.y && my<bottle.y+60){
+
+score++
+document.getElementById("score").innerText=score
+
+bottles.splice(index,1)
+
+}
+
+})
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,350,500)
+
+ctx.fillStyle="brown"
+
+bottles.forEach(bottle=>{
+
+ctx.fillRect(bottle.x,bottle.y,30,60)
+
+bottle.y-=bottle.speed
+
+})
+
+requestAnimationFrame(draw)
+
+}
+
+draw()
+
+</script>
+
+</body>
+</html>
