@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Delivery Calculator</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+}
+
+select,button{
+
+padding:10px;
+margin:10px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Delivery Fee Calculator</h2>
+
+<select id="location">
+
+<option value="500">Lagos Mainland</option>
+
+<option value="800">Lagos Island</option>
+
+<option value="1500">Outside Lagos</option>
+
+</select>
+
+<br>
+
+<button onclick="calculate()">Calculate Delivery</button>
+
+<h3 id="fee"></h3>
+
+<script>
+
+function calculate(){
+
+let fee = document.getElementById("location").value
+
+document.getElementById("fee").innerText = "Delivery Fee: ₦"+fee
+
+}
+
+</script>
+
+</body>
+
+</html>
