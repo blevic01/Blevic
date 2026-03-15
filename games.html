@@ -11,7 +11,7 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0a0a0a;
+background:#0b0b0b;
 color:white;
 }
 
@@ -24,10 +24,12 @@ font-weight:bold;
 }
 
 .container{
+
 display:grid;
 grid-template-columns:repeat(2,1fr);
 gap:15px;
 padding:15px;
+
 }
 
 .game-card{
@@ -37,6 +39,12 @@ border-radius:10px;
 padding:15px;
 text-align:center;
 box-shadow:0 4px 10px rgba(0,0,0,0.5);
+
+}
+
+.game-card h3{
+
+margin-top:5px;
 
 }
 
@@ -71,7 +79,7 @@ font-size:18px;
 <body>
 
 <div class="header">
-🎮 Blevic Game Center
+🎮 Blevic Superstore Game Center
 </div>
 
 <div class="container">
@@ -112,34 +120,15 @@ font-size:18px;
 </div>
 
 <div class="game-card">
+<h3>🎨 Color Match</h3>
+<button onclick="openGame('color.html')">Play</button>
+</div>
+
+<div class="game-card">
 <h3>🧩 Puzzle Game</h3>
-<button onclick="openPuzzle()">Play</button>
+<button onclick="openGame('puzzle.html')">Play</button>
 </div>
 
-</div>
-
-<a href="index.html">
-<div class="home">🏠</div>
-</a>
-
-<script>
-
-function openGame(game){
-
-window.location.href=game
-
-}
-
-function openPuzzle(){
-
-window.location.href="puzzle.html"
-
-}
-
-</script>
-
-</body>
-</html>
 <div class="game-card">
 <h3>🎰 Spin & Win</h3>
 <button onclick="openGame('spin.html')">Play</button>
@@ -154,3 +143,22 @@ window.location.href="puzzle.html"
 <h3>🏆 Leaderboard</h3>
 <button onclick="openGame('leaderboard.html')">View</button>
 </div>
+
+</div>
+
+<a href="index.html">
+<div class="home">🏠</div>
+</a>
+
+<script>
+
+function openGame(game){
+
+window.location.href = game
+
+}
+
+</script>
+
+</body>
+</html>
