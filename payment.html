@@ -2,59 +2,145 @@
 <html>
 
 <head>
-<title>Payment</title>
-<script src="order.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Blevic Superstore Payment</title>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+text-align:center;
+margin:0;
+}
+
+.header{
+background:#ff9900;
+padding:15px;
+font-size:20px;
+font-weight:bold;
+}
+
+.box{
+background:white;
+margin:20px;
+padding:20px;
+border-radius:10px;
+}
+
+button{
+padding:12px;
+margin:10px;
+border:none;
+background:#ff9900;
+color:white;
+width:80%;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<h2>Payment</h2>
+<div class="header">
+💳 Payment
+</div>
+
+<div class="box">
+
+<h3>Total Amount</h3>
+
+<h2>₦<span id="amount"></span></h2>
+
+</div>
+
+<div class="box">
+
+<h3>Select Payment Method</h3>
+
+<button onclick="paystackPay()">Pay with Paystack</button>
+
+<button onclick="showTransfer()">Pay with Bank Transfer</button>
+
+</div>
+
+<div class="box" id="transferBox" style="display:none">
 
 <h3>Bank Transfer</h3>
 
-<p>Bank: OPAY</p>
+<p><b>Bank:</b> Opay</p>
 
-<p>Account Number: 07081121045</p>
+<p><b>Account Number:</b> 7081121045</p>
 
-<button onclick="placeOrder()">I Have Paid</button>
+<p>After transfer, click the button below</p>
 
-<hr>
+<button onclick="confirmTransfer()">I Have Made The Transfer</button>
 
-<h3>Pay Online</h3>
-
-<button onclick="payWithPaystack()">Pay with Paystack</button>
-
-<script src="https://js.paystack.co/v1/inline.js"></script>
+</div>
 
 <script>
 
-function payWithPaystack(){
+let total = localStorage.getItem("totalPayment") || 0
+
+document.getElementById("amount").innerText = total
+
+function paystackPay(){
 
 let handler = PaystackPop.setup({
 
-key: "YOUR_PUBLIC_KEY",
+key: "YOUR_PAYSTACK_PUBLIC_KEY",
 
 email: "customer@email.com",
 
-amount: 5000 * 100,
+amount: total * 100,
 
 currency: "NGN",
 
-callback: function(response){
+callback: function(){
 
-alert("Payment Successful");
+alert("Payment Successful")
 
-placeOrder();
+window.location.href="tracking.html"
 
 }
 
-});
+})
 
-handler.openIframe();
+handler.openIframe()
+
+}
+
+function showTransfer(){
+
+document.getElementById("transferBox").style.display="block"
+
+}
+
+function confirmTransfer(){
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+let message = "Hello, I have made a transfer for my order:%0A%0A"
+
+cart.forEach(item=>{
+
+message += item.name + " - ₦" + item.price + "%0A"
+
+})
+
+message += "%0ATotal: ₦"+total
+
+window.open("https://wa.me/2348032390904?text="+message)
 
 }
 
 </script>
 
 </body>
+
 </html>
