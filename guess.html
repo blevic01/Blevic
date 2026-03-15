@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guess Number</title>
+
+<style>
+body{
+font-family:Arial;
+text-align:center;
+background:#f4f4f4;
+}
+
+input{
+padding:10px;
+font-size:16px;
+}
+
+button{
+padding:10px;
+margin:10px;
+background:orange;
+border:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Guess The Number (1 - 100)</h2>
+
+<input id="guess" type="number">
+
+<br>
+
+<button onclick="check()">Guess</button>
+
+<p id="result"></p>
+
+<script>
+
+let number=Math.floor(Math.random()*100)+1
+
+function check(){
+
+let guess=document.getElementById("guess").value
+
+if(guess==number){
+
+document.getElementById("result").innerText="Correct!"
+
+}else if(guess>number){
+
+document.getElementById("result").innerText="Too High"
+
+}else{
+
+document.getElementById("result").innerText="Too Low"
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
