@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Squid Game</title>
+
+<style>
+
+body{
+text-align:center;
+font-family:Arial;
+background:#111;
+color:white;
+}
+
+#player{
+width:40px;
+height:40px;
+background:lime;
+position:absolute;
+bottom:50px;
+left:20px;
+}
+
+#goal{
+width:40px;
+height:40px;
+background:red;
+position:absolute;
+top:60px;
+right:20px;
+}
+
+button{
+padding:15px;
+margin-top:400px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Squid Game</h2>
+
+<p id="status">GREEN LIGHT</p>
+
+<div id="player"></div>
+<div id="goal"></div>
+
+<button onclick="move()">MOVE</button>
+
+<script>
+
+let status="green"
+
+function changeLight(){
+
+if(status=="green"){
+
+status="red"
+document.getElementById("status").innerText="RED LIGHT"
+
+}else{
+
+status="green"
+document.getElementById("status").innerText="GREEN LIGHT"
+
+}
+
+}
+
+setInterval(changeLight,3000)
+
+function move(){
+
+let player=document.getElementById("player")
+
+let left=player.offsetLeft
+
+if(status=="red"){
+
+alert("You moved on RED LIGHT! Start again")
+
+player.style.left="20px"
+
+}else{
+
+player.style.left=(left+40)+"px"
+
+if(left>260){
+
+alert("You Win!")
+
+player.style.left="20px"
+
+}
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
