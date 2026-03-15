@@ -1,136 +1,167 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Snake Game</title>
-
 <style>
-
 body{
-text-align:center;
 font-family:Arial;
-background:#222;
+margin:0;
+padding:0;
+text-align:center;
+background:#f4f4f4;
+}
+.header{
+background:#ff9900;
 color:white;
+padding:15px;
+font-size:22px;
+font-weight:bold;
 }
-
-canvas{
-background:black;
+#gameCanvas{
+background:#333;
+margin-top:20px;
+border-radius:10px;
 }
-
-button{
-margin:5px;
-padding:10px;
+.controls{
+margin-top:15px;
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:10px;
 }
-
+.controls button{
+padding:15px;
+border:none;
+border-radius:10px;
+background:#ff9900;
+color:white;
+font-size:18px;
+cursor:pointer;
+width:70px;
+height:70px;
+}
+.levels{
+margin-top:15px;
+}
 </style>
-
 </head>
-
 <body>
 
-<h2>Snake Game</h2>
+<div class="header">🐍 Snake Game</div>
 
-<p>Select Speed</p>
+<canvas id="gameCanvas" width="300" height="400"></canvas>
 
-<button onclick="startGame(300)">Very Slow</button>
-<button onclick="startGame(150)">Medium</button>
-<button onclick="startGame(90)">Fast</button>
-<button onclick="startGame(50)">Super Fast</button>
+<div class="levels">
+<label>Choose Level: </label>
+<select id="levelSelect" onchange="changeLevel()">
+<option value="200">Very Slow</option>
+<option value="150">Slow</option>
+<option value="100" selected>Medium</option>
+<option value="70">Fast</option>
+<option value="40">Super Fast</option>
+</select>
+</div>
 
-<br><br>
-
-<canvas id="game" width="300" height="300"></canvas>
+<div class="controls">
+<button onclick="changeDirection('up')">⬆</button>
+<button onclick="changeDirection('left')">⬅</button>
+<button onclick="changeDirection('down')">⬇</button>
+<button onclick="changeDirection('right')">➡</button>
+</div>
 
 <script>
+let canvas = document.getElementById("gameCanvas")
+let ctx = canvas.getContext("2d")
 
-let canvas=document.getElementById("game")
-let ctx=canvas.getContext("2d")
+let box = 20
+let snake = []
+snake[0] = {x: 10*box, y:10*box}
 
-let snake=[{x:10,y:10}]
-let food={x:5,y:5}
-let power={x:15,y:15}
+let food = {x: Math.floor(Math.random()*15)*box, y:Math.floor(Math.random()*19)*box}
+let score = 0
+let direction = null
+let speed = 100 // default medium
 
-let dx=1
-let dy=0
+// power-up: adds extra score
+function spawnFood(){
+food = {x: Math.floor(Math.random()*15)*box, y:Math.floor(Math.random()*19)*box}
+}
 
-let score=0
-let gameLoop
+document.addEventListener("keydown",move)
+function move(event){
+if(event.keyCode==37 && direction!="right") direction="left"
+else if(event.keyCode==38 && direction!="down") direction="up"
+else if(event.keyCode==39 && direction!="left") direction="right"
+else if(event.keyCode==40 && direction!="up") direction="down"
+}
 
-document.addEventListener("keydown",changeDirection)
-
-function startGame(speed){
-
-clearInterval(gameLoop)
-
-snake=[{x:10,y:10}]
-score=0
-
-gameLoop=setInterval(draw,speed)
-
+function changeDirection(dir){
+if(dir=="left" && direction!="right") direction="left"
+if(dir=="right" && direction!="left") direction="right"
+if(dir=="up" && direction!="down") direction="up"
+if(dir=="down" && direction!="up") direction="down"
 }
 
 function draw(){
+ctx.fillStyle="#333"
+ctx.fillRect(0,0,canvas.width,canvas.height)
 
-ctx.fillStyle="black"
-ctx.fillRect(0,0,300,300)
+// draw snake
+for(let i=0;i<snake.length;i++){
+ctx.fillStyle = i==0?"lime":"green"
+ctx.fillRect(snake[i].x,snake[i].y,box,box)
+ctx.strokeStyle="#111"
+ctx.strokeRect(snake[i].x,snake[i].y,box,box)
+}
 
-ctx.fillStyle="lime"
-
-snake.forEach(part=>{
-ctx.fillRect(part.x*15,part.y*15,14,14)
-})
-
+// draw food
 ctx.fillStyle="red"
-ctx.fillRect(food.x*15,food.y*15,14,14)
+ctx.fillRect(food.x,food.y,box,box)
 
-ctx.fillStyle="blue"
-ctx.fillRect(power.x*15,power.y*15,14,14)
+// snake head moves
+let snakeX = snake[0].x
+let snakeY = snake[0].y
 
-let head={
-x:snake[0].x+dx,
-y:snake[0].y+dy
+if(direction=="left") snakeX -= box
+if(direction=="right") snakeX += box
+if(direction=="up") snakeY -= box
+if(direction=="down") snakeY += box
+
+// check collision
+for(let i=1;i<snake.length;i++){
+if(snakeX==snake[i].x && snakeY==snake[i].y){
+alert("Game Over! Score: "+score)
+snake = [{x:10*box,y:10*box}]
+direction=null
+score=0
+spawnFood()
+return
+}
 }
 
-snake.unshift(head)
-
-if(head.x==food.x && head.y==food.y){
-
-score+=1
-
-food={
-x:Math.floor(Math.random()*20),
-y:Math.floor(Math.random()*20)
-}
-
-}else if(head.x==power.x && head.y==power.y){
-
-score+=5
-
-power={
-x:Math.floor(Math.random()*20),
-y:Math.floor(Math.random()*20)
-}
-
+if(snakeX==food.x && snakeY==food.y){
+score++
+spawnFood()
 }else{
-
 snake.pop()
-
 }
 
+snake.unshift({x:snakeX, y:snakeY})
+
+// display score
+ctx.fillStyle="white"
+ctx.font="18px Arial"
+ctx.fillText("Score: "+score,10,20)
 }
 
-function changeDirection(e){
+let gameInterval = setInterval(draw,speed)
 
-if(e.key=="ArrowUp"){dx=0;dy=-1}
-if(e.key=="ArrowDown"){dx=0;dy=1}
-if(e.key=="ArrowLeft"){dx=-1;dy=0}
-if(e.key=="ArrowRight"){dx=1;dy=0}
-
+function changeLevel(){
+speed = parseInt(document.getElementById("levelSelect").value)
+clearInterval(gameInterval)
+gameInterval = setInterval(draw,speed)
 }
-
 </script>
-
 </body>
 </html>
