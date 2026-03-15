@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Leaderboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+table{
+
+margin:auto;
+border-collapse:collapse;
+width:80%;
+
+}
+
+td,th{
+
+border:1px solid white;
+padding:10px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>🏆 Game Leaderboard</h2>
+
+<table>
+
+<tr>
+<th>Player</th>
+<th>Score</th>
+</tr>
+
+<tr>
+<td id="player">You</td>
+<td id="score">0</td>
+</tr>
+
+</table>
+
+<script>
+
+let score=localStorage.getItem("highscore") || 0
+
+document.getElementById("score").innerText=score
+
+</script>
+
+</body>
+</html>
