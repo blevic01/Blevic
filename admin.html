@@ -1,24 +1,135 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>Admin Panel</title>
-<script src="admin.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blevic Admin Panel</title>
+<style>
+body{
+font-family:Arial;
+background:#f4f4f4;
+margin:0;
+padding:0;
+}
+.header{
+background:#ff9900;
+padding:15px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+.container{
+padding:15px;
+}
+.product{
+background:white;
+margin:10px 0;
+padding:10px;
+border-radius:8px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+button{
+padding:8px;
+margin-left:5px;
+border:none;
+border-radius:5px;
+background:#ff9900;
+color:white;
+}
+input{
+padding:5px;
+margin:5px 0;
+width:100%;
+}
+</style>
 </head>
+<body>
+<div class="header">
+📊 Blevic Superstore Admin
+</div>
+<div class="container">
 
-<body onload="loadProducts()">
-
-<h2>Admin Dashboard</h2>
-
-<input id="name" placeholder="Product Name"><br><br>
-
-<input id="price" placeholder="Price"><br><br>
-
-<input id="image" placeholder="Image URL"><br><br>
-
+<h3>Add New Product</h3>
+<input type="text" id="pname" placeholder="Product Name">
+<input type="number" id="pprice" placeholder="Price">
+<input type="text" id="pimg" placeholder="Image URL">
 <button onclick="addProduct()">Add Product</button>
 
-<div id="product-list"></div>
+<h3>Existing Products</h3>
+<div id="products"></div>
+
+</div>
+
+<script>
+
+// Load products from localStorage or default products
+let products = JSON.parse(localStorage.getItem("products")) || [
+{name:"Eva Soap Pack", price:500, img:"https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png"},
+{name:"Bag of Rice", price:25000, img:"https://i.postimg.cc/8C7fH3nP/rice.jpg"},
+{name:"Indomie", price:300, img:"https://i.postimg.cc/gjGJ0x9S/noodles.jpg"},
+{name:"Peak Milk", price:1500, img:"https://i.postimg.cc/4yQk7L2G/milk.jpg"}
+]
+
+function showProducts(){
+let container = document.getElementById("products")
+container.innerHTML=""
+products.forEach((p,index)=>{
+container.innerHTML += `
+<div class="product">
+<div>
+<img src="${p.img}" style="width:60px;height:60px;object-fit:cover;border-radius:5px">
+<p>${p.name} - ₦${p.price}</p>
+</div>
+<div>
+<button onclick="removeProduct(${index})">Remove</button>
+<button onclick="editProduct(${index})">Edit</button>
+</div>
+</div>
+`
+})
+}
+
+function addProduct(){
+let name = document.getElementById("pname").value
+let price = parseInt(document.getElementById("pprice").value)
+let img = document.getElementById("pimg").value
+if(name && price && img){
+products.push({name:name, price:price, img:img})
+localStorage.setItem("products",JSON.stringify(products))
+document.getElementById("pname").value=""
+document.getElementById("pprice").value=""
+document.getElementById("pimg").value=""
+showProducts()
+alert("Product Added!")
+}else{
+alert("Please fill all fields")
+}
+}
+
+function removeProduct(index){
+if(confirm("Are you sure you want to remove this product?")){
+products.splice(index,1)
+localStorage.setItem("products",JSON.stringify(products))
+showProducts()
+}
+}
+
+function editProduct(index){
+let name = prompt("Edit Product Name", products[index].name)
+let price = prompt("Edit Price", products[index].price)
+let img = prompt("Edit Image URL", products[index].img)
+if(name && price && img){
+products[index]={name:name,price:parseInt(price),img:img}
+localStorage.setItem("products",JSON.stringify(products))
+showProducts()
+}
+}
+
+// Initial load
+showProducts()
+
+</script>
 
 </body>
 </html>
