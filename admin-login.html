@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login</title>
+<style>
+body{font-family:Arial;text-align:center;margin:0;padding:0;background:#f4f4f4;}
+.header{background:#ff9900;padding:15px;font-size:22px;color:white;}
+input{padding:10px;margin:10px;width:80%;}
+button{padding:10px;background:#ff9900;color:white;border:none;width:50%;border-radius:5px;}
+</style>
+</head>
+<body>
+<div class="header">Admin Login</div>
+<h3>Enter Password</h3>
+<input type="password" id="pass" placeholder="Password">
+<br>
+<button onclick="login()">Login</button>
+
+<script>
+function login(){
+let password = document.getElementById("pass").value
+if(password === "blevicadmin"){ // set your own password
+localStorage.setItem("adminLoggedIn", "true")
+window.location.href="admin.html"
+}else{
+alert("Incorrect password")
+}
+}
+</script>
+</body>
+</html>
