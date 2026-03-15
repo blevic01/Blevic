@@ -1,164 +1,106 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Blevic Superstore Products</title>
-
 <style>
-
 body{
 font-family:Arial;
-background:#f5f5f5;
+background:#f4f4f4;
 margin:0;
+padding:0;
 }
-
 .header{
 background:#ff9900;
 padding:15px;
 text-align:center;
-font-size:20px;
+font-size:22px;
 font-weight:bold;
+color:white;
 }
-
 .products{
-
 display:grid;
 grid-template-columns:repeat(2,1fr);
-gap:10px;
-padding:10px;
-
+gap:15px;
+padding:15px;
 }
-
 .product{
-
 background:white;
-padding:10px;
 border-radius:10px;
-text-align:center;
-box-shadow:0 3px 8px rgba(0,0,0,0.2);
-
-}
-
-.product img{
-
-width:100%;
-height:120px;
-object-fit:cover;
-
-}
-
-button{
-
-margin-top:10px;
 padding:10px;
-background:#ff9900;
-border:none;
-color:white;
-border-radius:5px;
-width:100%;
-
+text-align:center;
+box-shadow:0 3px 10px rgba(0,0,0,0.3);
 }
-
+.product img{
+width:100%;
+height:150px;
+object-fit:cover;
+border-radius:8px;
+}
+button{
+padding:10px;
+margin-top:10px;
+width:90%;
+border:none;
+border-radius:8px;
+background:#ff9900;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
 .cart{
-
 position:fixed;
 bottom:20px;
 right:20px;
 background:#ff9900;
 padding:15px;
 border-radius:50%;
-font-size:18px;
-
+font-size:20px;
+color:white;
+text-align:center;
+cursor:pointer;
 }
-
 </style>
-
 </head>
-
 <body>
 
-<div class="header">
-🛒 Blevic Superstore
-</div>
+<div class="header">🛒 Blevic Superstore</div>
 
-<div class="products">
+<div class="products"></div>
 
-<div class="product">
-
-<img src="https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png">
-
-<h3>Eva Soap Pack</h3>
-
-<p>₦500</p>
-
-<button onclick="addToCart('Eva Soap Pack',500)">
-Add To Cart
-</button>
-
-</div>
-
-<div class="product">
-
-<img src="https://i.postimg.cc/8C7fH3nP/rice.jpg">
-
-<h3>Bag of Rice</h3>
-
-<p>₦25000</p>
-
-<button onclick="addToCart('Bag of Rice',25000)">
-Add To Cart
-</button>
-
-</div>
-
-<div class="product">
-
-<img src="https://i.postimg.cc/gjGJ0x9S/noodles.jpg">
-
-<h3>Indomie Noodles</h3>
-
-<p>₦300</p>
-
-<button onclick="addToCart('Indomie',300)">
-Add To Cart
-</button>
-
-</div>
-
-<div class="product">
-
-<img src="https://i.postimg.cc/4yQk7L2G/milk.jpg">
-
-<h3>Peak Milk</h3>
-
-<p>₦1500</p>
-
-<button onclick="addToCart('Peak Milk',1500)">
-Add To Cart
-</button>
-
-</div>
-
-</div>
-
-<a href="cart.html">
-<div class="cart">🛒</div>
-</a>
+<div class="cart" onclick="openCart()">🛒</div>
 
 <script>
 
+// Load products from admin
+let products = JSON.parse(localStorage.getItem("products")) || []
+
+let container = document.querySelector(".products")
+container.innerHTML = ""
+
+// Display all products
+products.forEach(p=>{
+container.innerHTML += `
+<div class="product">
+<img src="${p.img}" alt="${p.name}">
+<h3>${p.name}</h3>
+<p>₦${p.price}</p>
+<button onclick="addToCart('${p.name}',${p.price})">Add To Cart</button>
+</div>
+`
+})
+
+// Add to cart function
 function addToCart(name,price){
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+cart.push({name:name, price:price})
+localStorage.setItem("cart", JSON.stringify(cart))
+alert(name+" added to cart!")
+}
 
-let cart=JSON.parse(localStorage.getItem("cart")) || []
-
-cart.push({name:name,price:price})
-
-localStorage.setItem("cart",JSON.stringify(cart))
-
-alert(name+" added to cart")
-
+// Open cart page
+function openCart(){
+window.location.href = "cart.html"
 }
 
 </script>
