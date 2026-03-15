@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Daily Reward</title>
+
+<style>
+
+body{
+text-align:center;
+font-family:Arial;
+background:#222;
+color:white;
+}
+
+button{
+
+padding:15px;
+background:orange;
+border:none;
+font-size:16px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>🎁 Daily Reward</h2>
+
+<p>Claim your free coins</p>
+
+<button onclick="claim()">Claim Reward</button>
+
+<p>Coins: <span id="coins">0</span></p>
+
+<script>
+
+let coins=localStorage.getItem("coins") || 0
+
+document.getElementById("coins").innerText=coins
+
+function claim(){
+
+let last=localStorage.getItem("lastReward")
+
+let now=new Date().getTime()
+
+if(last && now-last < 86400000){
+
+alert("Come back tomorrow!")
+
+return
+
+}
+
+coins=parseInt(coins)+50
+
+localStorage.setItem("coins",coins)
+
+localStorage.setItem("lastReward",now)
+
+document.getElementById("coins").innerText=coins
+
+alert("You received 50 coins!")
+
+}
+
+</script>
+
+</body>
+</html>
