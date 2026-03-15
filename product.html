@@ -36,6 +36,7 @@ width:100%;
 height:150px;
 object-fit:cover;
 border-radius:8px;
+cursor:pointer;
 }
 button{
 padding:10px;
@@ -60,6 +61,17 @@ color:white;
 text-align:center;
 cursor:pointer;
 }
+.rating{
+margin-top:5px;
+}
+.rating span{
+cursor:pointer;
+font-size:20px;
+color:gray;
+}
+.rating span.selected{
+color:gold;
+}
 </style>
 </head>
 <body>
@@ -71,26 +83,45 @@ cursor:pointer;
 <div class="cart" onclick="openCart()">🛒</div>
 
 <script>
-
 // Load products from admin
 let products = JSON.parse(localStorage.getItem("products")) || []
 
 let container = document.querySelector(".products")
 container.innerHTML = ""
 
-// Display all products
-products.forEach(p=>{
+// Display products
+products.forEach((p,index)=>{
 container.innerHTML += `
 <div class="product">
-<img src="${p.img}" alt="${p.name}">
+<img src="${p.img}" alt="${p.name}" onclick="showDetails(${index})">
 <h3>${p.name}</h3>
 <p>₦${p.price}</p>
+
+<div class="rating" id="rating${index}">
+<span onclick="rateProduct(${index},1)">★</span>
+<span onclick="rateProduct(${index},2)">★</span>
+<span onclick="rateProduct(${index},3)">★</span>
+<span onclick="rateProduct(${index},4)">★</span>
+<span onclick="rateProduct(${index},5)">★</span>
+</div>
+
 <button onclick="addToCart('${p.name}',${p.price})">Add To Cart</button>
+<button onclick="buyNow('${p.name}',${p.price})">Buy Now</button>
 </div>
 `
 })
 
-// Add to cart function
+// Rating system
+function rateProduct(index,value){
+let r = document.getElementById("rating"+index).children
+for(let i=0;i<5;i++){
+if(i<value) r[i].classList.add("selected")
+else r[i].classList.remove("selected")
+}
+alert("You rated "+products[index].name+" "+value+" stars!")
+}
+
+// Add to cart
 function addToCart(name,price){
 let cart = JSON.parse(localStorage.getItem("cart")) || []
 cart.push({name:name, price:price})
@@ -98,11 +129,28 @@ localStorage.setItem("cart", JSON.stringify(cart))
 alert(name+" added to cart!")
 }
 
-// Open cart page
+// Open cart
 function openCart(){
 window.location.href = "cart.html"
 }
 
+// Buy now button
+function buyNow(name,price){
+let choice = confirm("Do you want to pay via Paystack? Press Cancel for Bank Transfer")
+localStorage.setItem("totalPayment", price)
+localStorage.setItem("cart", JSON.stringify([{name:name, price:price}]))
+if(choice){
+window.location.href = "payment.html" // paystack payment page
+}else{
+window.location.href = "payment.html" // same page handles transfer
+}
+}
+
+// Show full product details
+function showDetails(index){
+let p = products[index]
+alert(`Product: ${p.name}\nPrice: ₦${p.price}\nImage URL: ${p.img}`)
+}
 </script>
 
 </body>
