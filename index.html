@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,58 +15,69 @@ font-family:Arial;
 background-image:url("https://i.postimg.cc/y8MPbn3x/file-00000000c9d07246a98b3cee735de787.png");
 background-size:cover;
 background-position:center;
+color:white;
 }
-
-/* TOP BAR */
 
 .header{
+
 background:#ff9900;
-padding:12px;
-color:white;
-font-size:20px;
+padding:15px;
 text-align:center;
-font-weight:bold;
-}
-
-/* NAVIGATION LIKE JUMIA */
-
-.nav{
-display:flex;
-justify-content:space-around;
-background:white;
-padding:10px;
-box-shadow:0 2px 5px rgba(0,0,0,0.2);
-}
-
-.nav button{
-border:none;
-background:none;
-font-size:14px;
-font-weight:bold;
-}
-
-/* FLOATING BUTTONS */
-
-.floating{
-position:fixed;
-right:20px;
-width:55px;
-height:55px;
-border-radius:50%;
-border:none;
 font-size:22px;
+font-weight:bold;
+
+}
+
+.username{
+
+text-align:center;
+margin-top:10px;
+font-size:18px;
+
+}
+
+.menu{
+
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+padding:20px;
+
+}
+
+.menu button{
+
+padding:15px;
+font-size:16px;
+border:none;
+background:#ff9900;
 color:white;
-cursor:pointer;
+border-radius:8px;
+
 }
 
 .games{
-bottom:90px;
-background:#ff6600;
+
+position:fixed;
+bottom:20px;
+right:20px;
+background:#ff9900;
+padding:15px;
+border-radius:50%;
+font-size:20px;
+
 }
 
-.chat{
+.customer{
+
+position:fixed;
 bottom:20px;
-background:#28a745;
+left:20px;
+background:#ff9900;
+padding:15px;
+border-radius:50%;
+font-size:20px;
+
 }
 
 </style>
@@ -76,32 +87,66 @@ background:#28a745;
 <body>
 
 <div class="header">
-Blevic Superstore
+🏪 Blevic Superstore
 </div>
 
-<div class="nav">
+<div id="username" class="username"></div>
 
-<button onclick="location.href='product.html'">Products</button>
+<div class="menu">
 
-<button onclick="location.href='cart.html'">Cart</button>
+<button onclick="openPage('product.html')">
+🛒 Products
+</button>
 
-<button onclick="location.href='login.html'">Login</button>
+<button onclick="openPage('cart.html')">
+🧾 Cart
+</button>
 
-<button onclick="location.href='signup.html'">Sign Up</button>
+<button onclick="openPage('login.html')">
+🔑 Login
+</button>
 
-<button onclick="location.href='account.html'">Account</button>
+<button onclick="openPage('signup.html')">
+📝 Sign Up
+</button>
+
+<button onclick="openPage('spin.html')">
+🎰 Spin & Win
+</button>
+
+<button onclick="openPage('daily.html')">
+🎁 Daily Reward
+</button>
 
 </div>
 
-<!-- FLOATING BUTTONS -->
-
-<button class="floating games" onclick="location.href='games.html'">
+<div class="games" onclick="openPage('game.html')">
 🎮
-</button>
+</div>
 
-<button class="floating chat" onclick="location.href='chat.html'">
+<div class="customer" onclick="openPage('chat.html')">
 💬
-</button>
+</div>
+
+<script>
+
+function openPage(page){
+
+window.location.href = page
+
+}
+
+let user = localStorage.getItem("username")
+
+if(user){
+
+document.getElementById("username").innerHTML =
+"Welcome "+user
+
+}
+
+</script>
 
 </body>
+
 </html>
