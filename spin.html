@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Spin & Win</title>
+
+<style>
+
+body{
+text-align:center;
+font-family:Arial;
+background:#111;
+color:white;
+}
+
+#wheel{
+
+width:200px;
+height:200px;
+border-radius:50%;
+border:10px solid orange;
+margin:30px auto;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+
+}
+
+button{
+
+padding:12px;
+background:orange;
+border:none;
+color:white;
+font-size:16px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>🎰 Spin & Win</h2>
+
+<div id="wheel">SPIN</div>
+
+<button onclick="spin()">Spin</button>
+
+<p>Your Coins: <span id="coins">0</span></p>
+
+<script>
+
+let coins=localStorage.getItem("coins") || 0
+document.getElementById("coins").innerText=coins
+
+function spin(){
+
+let rewards=[5,10,20,50,100]
+
+let win=rewards[Math.floor(Math.random()*rewards.length)]
+
+coins=parseInt(coins)+win
+
+localStorage.setItem("coins",coins)
+
+alert("You won "+win+" coins!")
+
+document.getElementById("coins").innerText=coins
+
+}
+
+</script>
+
+</body>
+</html>
