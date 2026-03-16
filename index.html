@@ -48,6 +48,7 @@ body {
   <button onclick="goProducts()">🛍 Products</button>
   <button onclick="toggleCart()">🛒 Cart <span id="cart-count">0</span></button>
   <button onclick="goLogin()">🔑 Login / Signup</button>
+  <button onclick="goTracking()">📦 Track Order</button>
 </div>
 
 <div class="floating" onclick="goGames()">🎮</div>
@@ -127,10 +128,11 @@ document.getElementById("paid").onclick=function(){
 }
 
 // Navigation functions
-function goProducts(){ window.location.href="products.html" }
-function goLogin(){ window.location.href="login.html" }
-function goGames(){ window.location.href="games.html" }
-function goCustomerCare(){ window.location.href="chat.html" }
+function goProducts(){ window.location.href="products.html"; }
+function goLogin(){ window.location.href="login.html"; }
+function goGames(){ window.location.href="games.html"; }
+function goCustomerCare(){ window.location.href="chat.html"; }
+function goTracking(){ window.location.href="tracking.html"; } // <-- Track Order button
 
 updateCartCounter();
 </script>
