@@ -1,91 +1,77 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Products - Blevic Superstore</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Products</title>
+
 <style>
-body{font-family:Arial;margin:0;padding:0;background:#f4f4f4;}
-.header{background:#ff9900;padding:15px;text-align:center;font-size:22px;color:white;}
-.products{display:flex;flex-wrap:wrap;justify-content:center;padding:15px;gap:15px;}
-.product{background:white;padding:10px;border-radius:10px;width:160px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-.product img{width:100%;height:120px;object-fit:cover;border-radius:5px;cursor:pointer;}
-.product button{margin-top:5px;padding:8px;background:#ff9900;color:white;border:none;border-radius:5px;width:100%;cursor:pointer;font-size:14px;}
-.rating span{cursor:pointer;color:#ccc;font-size:16px;}
-.rating span.selected{color:gold;}
+
+body{
+font-family:Arial;
+background:#f5f5f5;
+}
+
+.product{
+background:white;
+margin:15px;
+padding:15px;
+border-radius:10px;
+box-shadow:0 0 5px gray;
+}
+
+button{
+background:#ff9900;
+border:none;
+padding:10px;
+color:white;
+border-radius:5px;
+}
+
 </style>
+
 </head>
+
 <body>
 
-<div class="header">🛍 Blevic Superstore Products</div>
+<h2 style="text-align:center">Products</h2>
 
-<div class="products"></div>
+<div class="product">
+
+<h3>Eva Soap</h3>
+
+<p>₦1200</p>
+
+<button onclick="addCart('Eva Soap',1200)">Add to Cart</button>
+
+</div>
+
+<div class="product">
+
+<h3>Milo</h3>
+
+<p>₦2500</p>
+
+<button onclick="addCart('Milo',2500)">Add to Cart</button>
+
+</div>
 
 <script>
-// Get products from admin
-let products = JSON.parse(localStorage.getItem("products")) || [];
-let container = document.querySelector(".products");
-container.innerHTML = "";
 
-// Display each product
-products.forEach((p,index)=>{
-  container.innerHTML += `
-    <div class="product">
-      <img src="${p.img}" alt="${p.name}" onclick="showDetails(${index})">
-      <h3>${p.name}</h3>
-      <p>₦${p.price}</p>
-      <div class="rating" id="rating${index}">
-        <span onclick="rateProduct(${index},1)">★</span>
-        <span onclick="rateProduct(${index},2)">★</span>
-        <span onclick="rateProduct(${index},3)">★</span>
-        <span onclick="rateProduct(${index},4)">★</span>
-        <span onclick="rateProduct(${index},5)">★</span>
-      </div>
-      <button onclick="addToCart(${index})">Add To Cart</button>
-      <button onclick="buyNow(${index})">Buy Now</button>
-    </div>
-  `;
-});
+function addCart(name,price){
 
-// Rating function
-function rateProduct(index,value){
-  let r = document.getElementById("rating"+index).children;
-  for(let i=0;i<5;i++){
-    if(i<value) r[i].classList.add("selected");
-    else r[i].classList.remove("selected");
-  }
-  alert("You rated "+products[index].name+" "+value+" stars!");
+let cart=JSON.parse(localStorage.getItem("cart")) || []
+
+cart.push({name,price})
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+alert("Added to cart")
+
 }
 
-// Show full product details
-function showDetails(index){
-  let p = products[index];
-  alert(`Product: ${p.name}\nPrice: ₦${p.price}\nImage URL: ${p.img}`);
-}
-
-// Add to cart
-function addToCart(index){
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let product = products[index];
-
-  let existing = cart.find(item=>item.name===product.name);
-  if(existing){
-    existing.qty +=1;
-  } else {
-    cart.push({name: product.name, price: product.price, qty:1});
-  }
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert(product.name+" added to cart!");
-}
-
-// Buy Now
-function buyNow(index){
-  let cart = [];
-  let product = products[index];
-  cart.push({name: product.name, price: product.price, qty:1});
-  localStorage.setItem("cart", JSON.stringify(cart));
-  window.location.href="payment.html"; // go to payment page
-}
 </script>
 
 </body>
