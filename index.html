@@ -8,17 +8,18 @@
 <style>
 
 body{
-font-family:Arial;
 margin:0;
-background:#f5f5f5;
+font-family:Arial;
+background:url('https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png');
+background-size:cover;
 }
 
 /* HEADER */
 
 .header{
-background:#ff6600;
+background:rgba(255,102,0,0.9);
 color:white;
-padding:10px;
+padding:12px;
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -32,128 +33,150 @@ cursor:pointer;
 .cart span{
 background:red;
 border-radius:50%;
-padding:2px 6px;
-font-size:14px;
+padding:3px 6px;
 }
 
-/* SLIDER */
-
-.slider{
-width:100%;
-height:180px;
-overflow:hidden;
-}
-
-.slider img{
-width:100%;
-height:180px;
-object-fit:cover;
-}
-
-/* BUTTONS */
+/* MENU BUTTONS */
 
 .menu{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:10px;
+padding:10px;
+}
+
+.menu button{
+padding:12px;
+border:none;
+background:white;
+border-radius:8px;
+font-size:15px;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* PRODUCTS */
+
+.products{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
 padding:10px;
 }
 
-.menu button{
-padding:15px;
-border:none;
+.product{
 background:white;
-border-radius:8px;
-box-shadow:0 2px 6px rgba(0,0,0,0.2);
-font-size:16px;
-cursor:pointer;
-}
-
-/* DAILY REWARD */
-
-.reward{
-background:white;
-margin:10px;
-padding:15px;
+padding:10px;
 border-radius:8px;
 text-align:center;
 }
 
+.product img{
+width:100%;
+height:130px;
+object-fit:cover;
+border-radius:6px;
+}
+
+.price{
+color:#ff6600;
+font-weight:bold;
+}
+
+.rating{
+color:gold;
+}
+
+button.add{
+background:#ff6600;
+color:white;
+border:none;
+padding:8px;
+border-radius:6px;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<!-- HEADER -->
-
 <div class="header">
 
-<div id="welcome">Welcome</div>
+<div id="welcome"></div>
 
-<div class="cart" onclick="openCart()">
+<div class="cart" onclick="window.location='cart.html'">
 🛒 <span id="cartCount">0</span>
 </div>
 
 </div>
 
-<!-- AUTO SLIDER -->
-
-<div class="slider">
-
-<img id="slide" src="https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png">
-
-</div>
-
-<!-- MAIN BUTTONS -->
+<!-- MENU -->
 
 <div class="menu">
 
-<button onclick="location.href='products.html'">🛍 Products</button>
+<button onclick="window.location='games.html'">
+🎮 Games
+</button>
 
-<button onclick="location.href='cart.html'">🛒 Cart</button>
+<button onclick="window.location='tracking.html'">
+📦 Track Order
+</button>
 
-<button onclick="location.href='tracking.html'">📦 Track Order</button>
-
-<button onclick="location.href='games.html'">🎮 Games</button>
-
-</div>
-
-<!-- DAILY REWARD -->
-
-<div class="reward">
-
-<h3>Daily Reward</h3>
-
-<p id="rewardText">Click to claim reward</p>
-
-<button onclick="claimReward()">Claim Reward</button>
+<button onclick="openWhatsApp()">
+💬 Customer Care
+</button>
 
 </div>
+
+<!-- PRODUCTS -->
+
+<div class="products" id="products"></div>
 
 <script>
 
-/* AUTO SLIDER */
+/* LOGIN CHECK */
 
-let images=[
-"https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png",
-"https://i.postimg.cc/QMdXHJnZ/file-00000000c9d07246a98b3cee735de787.png"
-]
+let user=localStorage.getItem("username")
 
-let i=0;
+if(!user){
+window.location="login.html"
+}
 
-setInterval(()=>{
+document.getElementById("welcome").innerText="Hi "+user
 
-i++
+/* PRODUCTS */
 
-if(i>=images.length) i=0
+let products=JSON.parse(localStorage.getItem("products")) || []
 
-document.getElementById("slide").src=images[i]
+let cart=JSON.parse(localStorage.getItem("cart")) || []
 
-},3000)
+function stars(n){
 
-/* CART COUNTER */
+let s=""
 
-let cart=JSON.parse(localStorage.getItem("cart"))||[]
+for(let i=1;i<=5;i++){
+s+= i<=n ? "⭐":"☆"
+}
+
+return s
+}
+
+function addCart(name,price,image){
+
+let item=cart.find(p=>p.name==name)
+
+if(item){item.qty++}
+else{cart.push({name,price,image,qty:1})}
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+updateCart()
+
+alert("Added to cart")
+
+}
+
+function updateCart(){
 
 let total=0
 
@@ -161,43 +184,49 @@ cart.forEach(p=> total+=p.qty)
 
 document.getElementById("cartCount").innerText=total
 
-/* LOGIN SYSTEM */
+}
 
-let user=localStorage.getItem("username")
+function loadProducts(){
 
-if(!user){
+let box=document.getElementById("products")
 
-user=prompt("Enter your name")
+box.innerHTML=""
 
-localStorage.setItem("username",user)
+products.forEach(p=>{
+
+box.innerHTML+=`
+
+<div class="product">
+
+<img src="${p.image}">
+
+<h4>${p.name}</h4>
+
+<div class="rating">${stars(p.rating)}</div>
+
+<p class="price">₦${p.price}</p>
+
+<button class="add" onclick="addCart('${p.name}',${p.price},'${p.image}')">
+Add to Cart
+</button>
+
+</div>
+
+`
+
+})
 
 }
 
-document.getElementById("welcome").innerText="Hi "+user
+function openWhatsApp(){
 
-/* DAILY REWARD */
-
-function claimReward(){
-
-let today=new Date().toDateString()
-
-let last=localStorage.getItem("rewardDate")
-
-if(today==last){
-
-alert("You already claimed today")
-
-return
+window.open("https://wa.me/2348032390904")
 
 }
 
-localStorage.setItem("rewardDate",today)
+loadProducts()
 
-alert("You received 10 coins!")
-
-document.getElementById("rewardText").innerText="Reward claimed today"
-
-}
+updateCart()
 
 </script>
 
