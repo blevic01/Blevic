@@ -2,31 +2,181 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Track Order - Blevic Superstore</title>
+<title>Blevic Superstore</title>
 <style>
-body{font-family:Arial;text-align:center;background:#f5f5f5;margin:0;padding:20px;}
-input{padding:10px;width:80%;max-width:300px;margin:10px 0;border-radius:5px;border:1px solid #ccc;}
-button{padding:12px 20px;margin:5px;border:none;border-radius:6px;background:#ff6a00;color:white;cursor:pointer;}
+body, html {
+  margin:0;
+  padding:0;
+  height:100%;
+  font-family:Arial;
+  overflow-x:hidden;
+}
+
+body {
+  background: url('https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png') no-repeat center center fixed;
+  background-size: cover;
+  color:white;
+}
+
+#welcome {
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+  margin-top:20px;
+  text-shadow: 2px 2px 5px #000;
+}
+
+/* MAIN BUTTONS */
+.main-buttons {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  margin-top:50px;
+}
+
+.main-buttons button {
+  padding:15px 25px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+  background:rgba(255,105,0,0.8);
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.main-buttons button:hover {
+  background:rgba(255,140,51,0.9);
+}
+
+/* FLOATING BUTTONS */
+.floating {
+  position: fixed;
+  bottom:20px;
+  right:20px;
+  background:#ff9900;
+  color:white;
+  padding:18px;
+  border-radius:50%;
+  font-size:24px;
+  cursor:pointer;
+  box-shadow:0 5px 12px rgba(0,0,0,0.3);
+}
+
+.floating-customer {
+  position: fixed;
+  bottom:20px;
+  right:90px;
+  background:#0288d1;
+  color:white;
+  padding:18px;
+  border-radius:50%;
+  font-size:24px;
+  cursor:pointer;
+  box-shadow:0 5px 12px rgba(0,0,0,0.3);
+}
+
+/* TRACK ORDER INPUT */
+#track-section {
+  margin-top:40px;
+  text-align:center;
+}
+
+#track-section input {
+  padding:10px;
+  font-size:16px;
+  border-radius:5px;
+  border:none;
+  width:70%;
+  max-width:300px;
+}
+
+#track-section button {
+  padding:10px 20px;
+  font-size:16px;
+  border:none;
+  border-radius:6px;
+  background:#28a745;
+  color:white;
+  cursor:pointer;
+  margin-left:5px;
+}
+
+#track-status {
+  margin-top:10px;
+  font-size:18px;
+  font-weight:bold;
+  text-shadow: 1px 1px 3px #000;
+}
 </style>
 </head>
 <body>
 
-<h2>Track Your Order</h2>
-<input type="text" id="orderCode" placeholder="Enter your order code">
-<br>
-<button onclick="track()">Track</button>
+<div id="welcome"></div>
+
+<div class="main-buttons">
+  <button onclick="goProducts()">🛍 Products</button>
+  <button onclick="goCart()">🛒 Cart <span id="cart-count">0</span></button>
+  <button onclick="goLogin()">🔑 Login / Signup</button>
+</div>
+
+<div class="floating" onclick="goGames()">🎮</div>
+<div class="floating-customer" onclick="goCustomerCare()">💬</div>
+
+<div id="track-section">
+  <h3>Track Your Order</h3>
+  <input type="text" id="orderCodeInput" placeholder="Enter your order code">
+  <button onclick="trackOrder()">Track</button>
+  <div id="track-status"></div>
+</div>
 
 <script>
-function track(){
-  let input = document.getElementById("orderCode").value.trim();
+// Show username if logged in
+let username = localStorage.getItem("username")
+if(username){
+  document.getElementById("welcome").innerText = "Hi "+username+" 👋 Welcome to Blevic Superstore"
+}
+
+// Cart counter
+function updateCartCount(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  document.getElementById("cart-count").innerText = cart.length;
+}
+updateCartCount();
+
+// Navigation functions
+function goProducts(){ window.location.href="product.html" }
+function goCart(){ window.location.href="cart.html" }
+function goLogin(){ window.location.href="login.html" }
+function goGames(){ window.location.href="games.html" }
+function goCustomerCare(){ window.location.href="chat.html" }
+
+// ---------------------
+// TRACK ORDER
+function trackOrder(){
+  let input = document.getElementById("orderCodeInput").value.trim();
   let lastCode = localStorage.getItem("lastOrderCode");
-  if(input === lastCode){
-    let cartSummary = "I want to order and I have paid my items.";
-    let whatsappURL = "https://wa.me/08032390904?text="+encodeURIComponent(cartSummary);
-    window.open(whatsappURL,"_blank");
-  } else{
-    alert("Invalid code! Please check your order code.");
+  let statusDiv = document.getElementById("track-status");
+
+  if(input === ""){
+    alert("Please enter your order code!");
+    return;
   }
+
+  statusDiv.innerText = "Processing your order...";
+  
+  setTimeout(()=>{
+    if(input === lastCode){
+      statusDiv.innerText = "✅ Your order is ready!";
+      // Open WhatsApp
+      let msg = "Hello, I want to order my product and I have paid it. My order code is: "+input;
+      let whatsappURL = "https://wa.me/08032390904?text="+encodeURIComponent(msg);
+      window.open(whatsappURL, "_blank");
+    } else{
+      statusDiv.innerText = "❌ Invalid code. Please check again.";
+    }
+  }, 5000); // 5 seconds processing
 }
 </script>
 
