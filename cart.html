@@ -1,90 +1,39 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cart - Blevic Superstore</title>
-<style>
-body{font-family:Arial;margin:0;padding:0;background:#f4f4f4;}
-.header{background:#ff9900;padding:15px;text-align:center;font-size:22px;color:white;}
-.cart-container{padding:15px;}
-.cart-item{background:white;margin:10px 0;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-.cart-item button{padding:5px;border:none;border-radius:5px;background:#ff9900;color:white;cursor:pointer;margin-left:5px;}
-.total{font-weight:bold;font-size:18px;margin-top:15px;text-align:right;}
-.checkout{background:#ff9900;color:white;padding:10px;border:none;width:100%;border-radius:8px;margin-top:10px;font-size:18px;cursor:pointer;}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cart</title>
 </head>
+
 <body>
-<div class="header">🛒 Cart</div>
-<div class="cart-container" id="cartContainer"></div>
+
+<h2>Your Cart</h2>
+
+<div id="cart"></div>
+
 <script>
-// Load cart
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let container = document.getElementById("cartContainer");
 
-function displayCart(){
-  container.innerHTML = "";
-  let total = 0;
-  if(cart.length===0){
-    container.innerHTML = "<p>Your cart is empty!</p>";
-    return;
-  }
+let cart=JSON.parse(localStorage.getItem("cart")) || []
 
-  cart.forEach((item,index)=>{
-    let itemTotal = item.price * item.qty;
-    total += itemTotal;
-    container.innerHTML += `
-      <div class="cart-item">
-        <div>
-          <h4>${item.name}</h4>
-          <p>₦${item.price} x ${item.qty} = ₦${itemTotal}</p>
-        </div>
-        <div>
-          <button onclick="removeItem(${index})">Remove</button>
-          <button onclick="increaseQty(${index})">+</button>
-          <button onclick="decreaseQty(${index})">-</button>
-        </div>
-      </div>
-    `;
-  });
+let html=""
 
-  container.innerHTML += `<div class="total">Total: ₦${total}</div>`;
-  container.innerHTML += `<button class="checkout" onclick="checkout()">Checkout</button>`;
-}
+let total=0
 
-function removeItem(index){
-  cart.splice(index,1);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  displayCart();
-}
+cart.forEach(p=>{
 
-function increaseQty(index){
-  cart[index].qty +=1;
-  localStorage.setItem("cart", JSON.stringify(cart));
-  displayCart();
-}
+html+="<p>"+p.name+" - ₦"+p.price+"</p>"
 
-function decreaseQty(index){
-  if(cart[index].qty>1){
-    cart[index].qty -=1;
-  } else {
-    cart.splice(index,1);
-  }
-  localStorage.setItem("cart", JSON.stringify(cart));
-  displayCart();
-}
+total+=p.price
 
-function checkout(){
-  if(cart.length===0){
-    alert("Cart is empty!");
-    return;
-  }
-  // Save cart for payment
-  localStorage.setItem("cart", JSON.stringify(cart));
-  window.location.href="payment.html";
-}
+})
 
-// Initial display
-displayCart();
+html+="<h3>Total ₦"+total+"</h3>"
+
+document.getElementById("cart").innerHTML=html
+
 </script>
+
 </body>
+
 </html>
