@@ -3,9 +3,22 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<title>Your Cart</title>
+
 <style>
 
-body{font-family:Arial;background:#f5f5f5;}
+body{
+font-family:Arial;
+background:#f5f5f5;
+margin:0;
+}
+
+.header{
+background:#ff6600;
+color:white;
+padding:12px;
+text-align:center;
+}
 
 .item{
 background:white;
@@ -14,6 +27,26 @@ padding:10px;
 border-radius:8px;
 display:flex;
 justify-content:space-between;
+align-items:center;
+}
+
+.controls button{
+padding:6px 10px;
+border:none;
+background:#ff6600;
+color:white;
+border-radius:4px;
+}
+
+.checkout{
+margin:20px;
+padding:12px;
+width:90%;
+background:#28a745;
+color:white;
+border:none;
+border-radius:6px;
+font-size:16px;
 }
 
 </style>
@@ -21,20 +54,25 @@ justify-content:space-between;
 
 <body>
 
-<h2 style="text-align:center;">Your Cart</h2>
+<div class="header">
+<h2>Your Cart</h2>
+</div>
 
-<div id="cart"></div>
+<div id="cartItems"></div>
 
-<button onclick="checkout()">Checkout</button>
+<center>
+<button class="checkout" onclick="checkout()">Checkout</button>
+</center>
 
 <script>
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cart = JSON.parse(localStorage.getItem("cart")) || []
 
 function loadCart(){
 
-let box=document.getElementById("cart");
-box.innerHTML="";
+let box=document.getElementById("cartItems")
+
+box.innerHTML=""
 
 cart.forEach((p,i)=>{
 
@@ -42,49 +80,70 @@ box.innerHTML+=`
 
 <div class="item">
 
-${p.name}
-
 <div>
 
-<button onclick="change(${i},-1)">-</button>
+<b>${p.name}</b><br>
+₦${p.price}
+
+</div>
+
+<div class="controls">
+
+<button onclick="changeQty(${i},-1)">−</button>
 
 ${p.qty}
 
-<button onclick="change(${i},1)">+</button>
+<button onclick="changeQty(${i},1)">+</button>
 
 </div>
 
 </div>
 
-`;
+`
 
-});
+})
 
 }
 
-function change(i,n){
+function changeQty(i,n){
 
-cart[i].qty+=n;
+cart[i].qty += n
 
-if(cart[i].qty<=0) cart.splice(i,1);
+if(cart[i].qty<=0){
 
-localStorage.setItem("cart",JSON.stringify(cart));
+cart.splice(i,1)
 
-loadCart();
+}
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+loadCart()
 
 }
 
 function checkout(){
 
-let code="BLEVIC"+Math.floor(Math.random()*100000);
+if(cart.length==0){
 
-localStorage.setItem("orderCode",code);
+alert("Cart is empty")
 
-alert("Order code: "+code);
+return
 
 }
 
-loadCart();
+let code="BLEVIC"+Math.floor(Math.random()*100000)
+
+localStorage.setItem("orderCode",code)
+
+alert("Order placed!\nYour code: "+code)
+
+localStorage.removeItem("cart")
+
+window.location="tracking.html"
+
+}
+
+loadCart()
 
 </script>
 
