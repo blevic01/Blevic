@@ -4,106 +4,69 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Products - Blevic Superstore</title>
 <style>
-body{
-  font-family:Arial;
-  margin:0;
-  padding:0;
-  background:#f5f5f5;
-  text-align:center;
-}
-
-h2{
-  margin-top:20px;
-}
-
-.products-container{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:15px;
-  padding:10px;
-}
-
-.product{
-  background:white;
-  width:150px;
-  border-radius:10px;
-  box-shadow:0 3px 8px rgba(0,0,0,0.2);
-  padding:10px;
-}
-
-.product img{
-  width:100%;
-  border-radius:8px;
-}
-
-.product button{
-  margin-top:5px;
-  padding:8px;
-  width:100%;
-  border:none;
-  border-radius:6px;
-  background:#ff6a00;
-  color:white;
-  cursor:pointer;
-}
-
-.product button:hover{
-  background:#ff8c33;
-}
+body{font-family:Arial; margin:0; padding:0; background:#f5f5f5;}
+h2{text-align:center;margin:20px;}
+.products-container{display:grid; grid-template-columns:repeat(2,1fr); gap:15px; padding:10px;}
+.product{background:white; border-radius:10px; padding:10px; box-shadow:0 3px 8px rgba(0,0,0,0.2);}
+.product img{width:100%; border-radius:8px;}
+.product h4, .product p{text-align:center; margin:5px 0;}
+.product button{width:100%; padding:10px; background:#ff6a00; color:white; border:none; border-radius:6px; cursor:pointer;}
+.product button:hover{background:#ff8a33;}
+.stars{display:flex; justify-content:center; gap:2px; cursor:pointer;}
+.star{font-size:18px; color:gray;}
+.star.selected{color:gold;}
 </style>
 </head>
 <body>
-
 <h2>Our Products</h2>
-
-<div class="products-container">
-
-<div class="product">
-  <img src="https://i.postimg.cc/QMdXHJnZ/file-00000000c9d07246a98b3cee735de787.png" alt="Eva Soap">
-  <h4>Eva Soap</h4>
-  <p>₦1200</p>
-  <button onclick="addCart('Eva Soap',1200,'https://i.postimg.cc/QMdXHJnZ/file-00000000c9d07246a98b3cee735de787.png')">Add to Cart</button>
-</div>
-
-<div class="product">
-  <img src="https://i.postimg.cc/yYcNtvPw/milo.jpg" alt="Milo">
-  <h4>Milo</h4>
-  <p>₦2500</p>
-  <button onclick="addCart('Milo',2500,'https://i.postimg.cc/yYcNtvPw/milo.jpg')">Add to Cart</button>
-</div>
-
-<div class="product">
-  <img src="https://i.postimg.cc/L8W5M6H5/sardine.jpg" alt="Sardine">
-  <h4>Sardine</h4>
-  <p>₦1500</p>
-  <button onclick="addCart('Sardine',1500,'https://i.postimg.cc/L8W5M6H5/sardine.jpg')">Add to Cart</button>
-</div>
-
-</div>
+<div class="products-container" id="products"></div>
 
 <script>
-// Function to add products to cart
-function addCart(name, price, image){
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push({name, price, image});
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert(name + " added to cart!");
-  updateCartCount();
+const productsData=[
+  {name:"Eva Soap",price:1200,image:"https://i.postimg.cc/QMdXHJnZ/file-00000000c9d07246a98b3cee735de787.png"},
+  {name:"Milo",price:2500,image:"https://i.postimg.cc/yYcNtvPw/milo.jpg"},
+  {name:"Sardine",price:1500,image:"https://i.postimg.cc/L8W5M6H5/sardine.jpg"},
+  {name:"Maggi Cubes",price:800,image:"https://i.postimg.cc/FHRnMZpr/maggi.jpg"}
+];
+
+const productsContainer=document.getElementById("products");
+
+productsData.forEach((product,index)=>{
+  let div=document.createElement("div");
+  div.className="product";
+  div.innerHTML=`
+    <img src="${product.image}" alt="${product.name}">
+    <h4>${product.name}</h4>
+    <p>₦${product.price}</p>
+    <div class="stars" id="stars-${index}">
+      <span class="star" onclick="rate(${index},1)">★</span>
+      <span class="star" onclick="rate(${index},2)">★</span>
+      <span class="star" onclick="rate(${index},3)">★</span>
+      <span class="star" onclick="rate(${index},4)">★</span>
+      <span class="star" onclick="rate(${index},5)">★</span>
+    </div>
+    <button onclick="addCart('${product.name}',${product.price},'${product.image}')">Add to Cart</button>
+  `;
+  productsContainer.appendChild(div);
+});
+
+function addCart(name,price,image){
+  let cart=JSON.parse(localStorage.getItem("cart"))||[];
+  cart.push({name,price,image});
+  localStorage.setItem("cart",JSON.stringify(cart));
+  alert(name+" added to cart!");
 }
 
-// Update cart counter on index.html if exists
-function updateCartCount(){
-  if(localStorage.getItem("cartCountElem")){
-    const elem = document.getElementById("cart-count");
-    if(elem){
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
-      elem.innerText = cart.length;
-    }
+// Rating
+let ratings={};
+function rate(index,star){
+  ratings[index]=star;
+  const starsDiv=document.getElementById("stars-"+index).children;
+  for(let i=0;i<starsDiv.length;i++){
+    if(i<star) starsDiv[i].classList.add("selected");
+    else starsDiv[i].classList.remove("selected");
   }
 }
-updateCartCount();
 </script>
-
 </body>
 </html>
