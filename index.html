@@ -109,6 +109,100 @@ border-radius:6px;
 </div>
 
 </div>
+<script>
+
+/* DEMO PRODUCTS */
+
+let products = [
+
+{
+name:"Eva Soap",
+price:500,
+image:"https://images.jumia.com.ng/unsafe/fit-in/500x500/filters:fill(white)/product/97/5311513/1.jpg",
+rating:4
+},
+
+{
+name:"Rice 5kg",
+price:8500,
+image:"https://i.imgur.com/BGQ1J9M.jpg",
+rating:5
+},
+
+{
+name:"Indomie Noodles",
+price:200,
+image:"https://i.imgur.com/9Y6xE6E.jpg",
+rating:4
+},
+
+{
+name:"Power Bank",
+price:6500,
+image:"https://i.imgur.com/YF9QK9H.jpg",
+rating:5
+}
+
+]
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+function stars(n){
+let s=""
+for(let i=1;i<=5;i++){
+s+= i<=n ? "⭐":"☆"
+}
+return s
+}
+
+function addCart(name,price,image){
+
+let item=cart.find(p=>p.name==name)
+
+if(item){item.qty++}
+else{cart.push({name,price,image,qty:1})}
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+alert("Added to cart")
+
+}
+
+function loadProducts(){
+
+let box=document.getElementById("products")
+
+box.innerHTML=""
+
+products.forEach(p=>{
+
+box.innerHTML+=`
+
+<div class="product">
+
+<img src="${p.image}">
+
+<h4>${p.name}</h4>
+
+<div>${stars(p.rating)}</div>
+
+<p>₦${p.price}</p>
+
+<button onclick="addCart('${p.name}',${p.price},'${p.image}')">
+Add to Cart
+</button>
+
+</div>
+
+`
+
+})
+
+}
+
+loadProducts()
+
+</script>
 
 <!-- MENU -->
 
