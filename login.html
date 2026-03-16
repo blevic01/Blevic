@@ -1,44 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Blevic Login</title>
+
 <style>
-body { font-family: Arial; background:#f2f2f2; text-align:center; padding:20px; }
-input { padding:10px; margin:5px; width:80%; max-width:300px; }
-button { padding:10px 15px; margin:10px; background:#ff9900; color:white; border:none; border-radius:6px; cursor:pointer; }
+body{
+font-family:Arial;
+background:#f5f5f5;
+text-align:center;
+padding-top:120px;
+}
+
+input{
+padding:12px;
+width:80%;
+margin:10px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+padding:12px 20px;
+background:#ff6600;
+color:white;
+border:none;
+border-radius:6px;
+}
+
 </style>
 </head>
+
 <body>
 
-<h2>Login</h2>
+<h2>Blevic Superstore</h2>
 
-<input id="email" placeholder="Email"><br>
-<input id="password" placeholder="Password" type="password"><br>
-<button onclick="login()">Login</button>
+<input id="name" placeholder="Enter your name">
 
-<p>No account? <a href="signup.html">Sign Up</a></p>
+<br>
+
+<button onclick="login()">Login / Sign Up</button>
 
 <script>
+
 function login(){
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-    let user = users.find(u=>u.email===email && u.password===password);
+let name=document.getElementById("name").value
 
-    if(user){
-        // Store current user
-        localStorage.setItem("currentUser", JSON.stringify(user));
-        // Temporary flag to show name only after login
-        localStorage.setItem("loggedIn", "true");
-
-        alert("✅ You have been logged in!");
-        window.location.href = "index.html"; // redirect to homepage
-    } else{
-        alert("Invalid email or password");
-    }
+if(name==""){
+alert("Please enter your name")
+return
 }
+
+localStorage.setItem("username",name)
+
+window.location="index.html"
+
+}
+
 </script>
 
 </body>
