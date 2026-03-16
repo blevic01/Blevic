@@ -1,122 +1,155 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blevic Superstore</title>
-
 <style>
 
-body{
-margin:0;
-font-family:Arial;
-background:#f5f5f5;
+/* GLOBAL */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  text-align: center;
 }
 
-header{
-background:#ff9900;
-color:white;
-padding:15px;
-text-align:center;
-font-size:22px;
+/* TOP BANNER */
+.banner {
+  width: 100%;
+  overflow: hidden;
 }
 
-.welcome{
-text-align:center;
-margin-top:10px;
-font-size:18px;
+.banner img {
+  width: 100%;
+  height: auto;
 }
 
-.menu{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:10px;
-padding:20px;
+/* WELCOME NAME (AFTER LOGIN) */
+#welcome {
+  font-size: 20px;
+  margin: 15px;
+  font-weight: bold;
+  color: #333;
 }
 
-.menu button{
-padding:15px;
-border:none;
-border-radius:8px;
-background:#ff9900;
-color:white;
-font-size:16px;
-width:140px;
+/* BUTTONS */
+.main-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 15px;
 }
 
-.floating{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#ff9900;
-color:white;
-padding:18px;
-border-radius:50%;
-font-size:22px;
+.main-buttons button {
+  padding: 15px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background: #ff6a00;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.floating2{
-position:fixed;
-bottom:20px;
-right:90px;
-background:#ff9900;
-color:white;
-padding:18px;
-border-radius:50%;
-font-size:22px;
+.main-buttons button:hover {
+  background: #ff8a33;
+}
+
+/* FLOATING BUTTONS */
+.floating {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ff9900;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+}
+
+.floating-customer {
+  position: fixed;
+  bottom: 20px;
+  right: 90px;
+  background: #0288d1;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+}
+
+/* CART COUNTER */
+#cart-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  font-size: 14px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  line-height: 20px;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<header>
-Blevic Superstore
-</header>
-
-<div class="welcome" id="welcome"></div>
-
-<div class="menu">
-
-<button onclick="location.href='product.html'">Products</button>
-
-<button onclick="location.href='cart.html'">Cart</button>
-
-<button onclick="location.href='tracking.html'">Track Order</button>
-
-<button onclick="location.href='login.html'">Login</button>
-
-<button onclick="location.href='signup.html'">Signup</button>
-
-<button onclick="logout()">Logout</button>
-
+<!-- BANNER IMAGE -->
+<div class="banner">
+  <img src="https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png" alt="Blevic Superstore Banner">
 </div>
 
-<div class="floating" onclick="location.href='games.html'">🎮</div>
+<!-- WELCOME MESSAGE -->
+<div id="welcome"></div>
 
-<div class="floating2" onclick="location.href='chat.html'">💬</div>
+<!-- MAIN ACTION BUTTONS -->
+<div class="main-buttons">
+  <button onclick="goProducts()">🛍 Shop Products</button>
+  <button style="position:relative;" onclick="goCart()">
+    🛒 View Cart
+    <span id="cart-count">0</span>
+  </button>
+  <button onclick="goTrack()">📦 Track Order</button>
+  <button onclick="goLogin()">🔑 Login / Signup</button>
+</div>
+
+<!-- FLOATING ACTION BUTTONS -->
+<div class="floating" title="Games" onclick="goGames()">🎮</div>
+<div class="floating-customer" title="Customer Care" onclick="goCustomerCare()">💬</div>
 
 <script>
 
-let name=localStorage.getItem("userName")
-
-if(name){
-document.getElementById("welcome").innerHTML="Welcome "+name
+// Show customer name if logged in
+let username = localStorage.getItem("username")
+if(username){
+  document.getElementById("welcome").innerText = 
+    "Hi "+username+" 👋 Welcome to Blevic Superstore"
+} else {
+  document.getElementById("welcome").innerText = ""
 }
 
-function logout(){
-
-localStorage.removeItem("userName")
-
-alert("Logged out")
-
-location.reload()
-
+// Cart counter (updates dynamically)
+function updateCartCount(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || []
+  document.getElementById("cart-count").innerText = cart.length
 }
+updateCartCount()
+
+// Navigation functions
+function goProducts(){ window.location.href="product.html" }
+function goCart(){ window.location.href="cart.html" }
+function goTrack(){ window.location.href="tracking.html" }
+function goLogin(){ window.location.href="login.html" }
+function goGames(){ window.location.href="games.html" }
+function goCustomerCare(){ window.location.href="chat.html" }
 
 </script>
 
