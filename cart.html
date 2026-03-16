@@ -2,50 +2,18 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Your Cart</title>
 
 <style>
 
-body{
-font-family:Arial;
-background:#f5f5f5;
-}
-
-h2{
-text-align:center;
-}
-
-.cart{
-padding:10px;
-}
+body{font-family:Arial;background:#f5f5f5;}
 
 .item{
 background:white;
+margin:10px;
 padding:10px;
-margin-bottom:10px;
-border-radius:10px;
+border-radius:8px;
 display:flex;
-align-items:center;
 justify-content:space-between;
-}
-
-.item img{
-width:60px;
-border-radius:6px;
-}
-
-.qty button{
-padding:5px;
-}
-
-.checkout{
-background:green;
-color:white;
-padding:10px;
-border:none;
-width:100%;
-border-radius:6px;
-font-size:18px;
 }
 
 </style>
@@ -53,11 +21,11 @@ font-size:18px;
 
 <body>
 
-<h2>Your Cart</h2>
+<h2 style="text-align:center;">Your Cart</h2>
 
-<div class="cart" id="cart"></div>
+<div id="cart"></div>
 
-<button class="checkout">Checkout</button>
+<button onclick="checkout()">Checkout</button>
 
 <script>
 
@@ -65,56 +33,54 @@ let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function loadCart(){
 
-let container=document.getElementById("cart");
-container.innerHTML="";
+let box=document.getElementById("cart");
+box.innerHTML="";
 
-if(cart.length==0){
-container.innerHTML="<p>Cart is empty</p>";
-return;
-}
+cart.forEach((p,i)=>{
 
-cart.forEach((item,index)=>{
+box.innerHTML+=`
 
-let div=document.createElement("div");
-div.className="item";
+<div class="item">
 
-div.innerHTML=`
+${p.name}
 
-<img src="${item.image}">
 <div>
-<b>${item.name}</b><br>
-₦${item.price}
+
+<button onclick="change(${i},-1)">-</button>
+
+${p.qty}
+
+<button onclick="change(${i},1)">+</button>
+
 </div>
-
-<div class="qty">
-
-<button onclick="changeQty(${index},-1)">-</button>
-
-${item.qty}
-
-<button onclick="changeQty(${index},1)">+</button>
 
 </div>
 
 `;
 
-container.appendChild(div);
-
 });
 
 }
 
-function changeQty(i,change){
+function change(i,n){
 
-cart[i].qty+=change;
+cart[i].qty+=n;
 
-if(cart[i].qty<=0){
-cart.splice(i,1);
-}
+if(cart[i].qty<=0) cart.splice(i,1);
 
 localStorage.setItem("cart",JSON.stringify(cart));
 
 loadCart();
+
+}
+
+function checkout(){
+
+let code="BLEVIC"+Math.floor(Math.random()*100000);
+
+localStorage.setItem("orderCode",code);
+
+alert("Order code: "+code);
 
 }
 
