@@ -1,39 +1,97 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cart</title>
+<title>Cart - Blevic Superstore</title>
+<style>
+body{font-family:Arial;background:#f5f5f5;margin:0;padding:0;text-align:center;}
+h2{margin:20px;}
+.cart-item{
+  background:white;
+  margin:10px auto;
+  padding:15px;
+  max-width:420px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 3px 8px rgba(0,0,0,0.2);
+}
+.cart-item img{
+  width:60px;
+  border-radius:5px;
+}
+.cart-item button{
+  padding:5px 10px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+#checkout{background:#ff6a00;color:white;padding:12px 20px;border:none;border-radius:8px;margin-top:15px;cursor:pointer;}
+#paid{background:#28a745;color:white;padding:12px 20px;border:none;border-radius:8px;margin-top:10px;cursor:pointer;}
+#total{margin-top:15px;font-weight:bold;}
+</style>
 </head>
-
 <body>
 
 <h2>Your Cart</h2>
-
-<div id="cart"></div>
+<div id="cart-list"></div>
+<div id="total"></div>
+<button id="checkout">Checkout</button><br>
+<button id="paid">I Have Paid</button>
 
 <script>
+// Load cart from localStorage
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-let cart=JSON.parse(localStorage.getItem("cart")) || []
+function renderCart(){
+  const cartList = document.getElementById("cart-list");
+  const totalDiv = document.getElementById("total");
+  cartList.innerHTML = "";
+  if(cart.length === 0){
+    cartList.innerHTML="<p>Your cart is empty!</p>";
+    totalDiv.innerHTML="";
+    return;
+  }
+  let total = 0;
+  cart.forEach((item,index)=>{
+    total += item.price;
+    let div = document.createElement("div");
+    div.className="cart-item";
+    div.innerHTML = `
+      <img src="${item.image}">
+      <span>${item.name} - ₦${item.price}</span>
+      <button onclick="removeItem(${index})">Remove</button>
+    `;
+    cartList.appendChild(div);
+  });
+  totalDiv.innerHTML="Total: ₦"+total;
+}
+function removeItem(index){
+  cart.splice(index,1);
+  localStorage.setItem("cart",JSON.stringify(cart));
+  renderCart();
+}
 
-let html=""
+renderCart();
 
-let total=0
+// Checkout button
+document.getElementById("checkout").onclick=function(){
+  if(cart.length===0){alert("Cart is empty!");return;}
+  alert("Checkout simulated. You can now click 'I Have Paid'.");
+}
 
-cart.forEach(p=>{
-
-html+="<p>"+p.name+" - ₦"+p.price+"</p>"
-
-total+=p.price
-
-})
-
-html+="<h3>Total ₦"+total+"</h3>"
-
-document.getElementById("cart").innerHTML=html
-
+// I Have Paid button
+document.getElementById("paid").onclick=function(){
+  if(cart.length===0){alert("Cart is empty!");return;}
+  // generate random code
+  let orderCode = "BLEVIC"+Math.floor(Math.random()*90000+10000);
+  localStorage.setItem("lastOrderCode",orderCode);
+  alert("Payment confirmed! Your order code: "+orderCode);
+  // clear cart
+  localStorage.removeItem("cart");
+  renderCart();
+}
 </script>
-
 </body>
-
 </html>
