@@ -1,138 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blevic Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blevic Admin</title>
+
 <style>
-body{font-family:Arial;margin:0;padding:0;background:#f4f4f4;}
-.header{background:#ff9900;padding:15px;text-align:center;font-size:22px;color:white;}
-.container{padding:15px;}
-h3{margin-top:20px;}
-.product, .order{background:white;margin:10px 0;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-button{padding:8px;margin-left:5px;border:none;border-radius:5px;background:#ff9900;color:white;cursor:pointer;}
-input{padding:5px;margin:5px 0;width:100%;}
-select{padding:5px;margin:5px 0;width:100%;}
+
+body{
+font-family:Arial;
+background:#f2f2f2;
+padding:20px;
+}
+
+h2{
+text-align:center;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+background:#ff6600;
+color:white;
+border:none;
+padding:10px;
+border-radius:6px;
+width:100%;
+font-size:16px;
+cursor:pointer;
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="header">📊 Blevic Superstore Admin</div>
+<h2>Add Product (Admin)</h2>
 
-<div class="container">
+<input id="name" placeholder="Product Name">
 
-<h3>Add New Product</h3>
-<input type="text" id="pname" placeholder="Product Name">
-<input type="number" id="pprice" placeholder="Price">
-<input type="text" id="pimg" placeholder="Image URL">
+<input id="price" placeholder="Product Price">
+
+<input id="image" placeholder="Product Image URL">
+
+<select id="rating">
+<option value="5">⭐⭐⭐⭐⭐</option>
+<option value="4">⭐⭐⭐⭐☆</option>
+<option value="3">⭐⭐⭐☆☆</option>
+<option value="2">⭐⭐☆☆☆</option>
+<option value="1">⭐☆☆☆☆</option>
+</select>
+
 <button onclick="addProduct()">Add Product</button>
 
-<h3>Existing Products</h3>
-<div id="products"></div>
-
-<h3>Orders</h3>
-<div id="orders"></div>
-
-</div>
-
 <script>
-// Check admin login
-if(localStorage.getItem("adminLoggedIn") !== "true"){
-alert("You must login first")
-window.location.href="admin-login.html"
-}
-
-// Load products
-let products = JSON.parse(localStorage.getItem("products")) || []
-
-// Load orders
-let orders = JSON.parse(localStorage.getItem("orders")) || []
-
-function showProducts(){
-let container = document.getElementById("products")
-container.innerHTML=""
-products.forEach((p,index)=>{
-container.innerHTML += `
-<div class="product">
-<div>
-<img src="${p.img}" style="width:60px;height:60px;object-fit:cover;border-radius:5px">
-<p>${p.name} - ₦${p.price}</p>
-</div>
-<div>
-<button onclick="editProduct(${index})">Edit</button>
-<button onclick="removeProduct(${index})">Remove</button>
-</div>
-</div>
-`
-})
-}
 
 function addProduct(){
-let name = document.getElementById("pname").value
-let price = parseInt(document.getElementById("pprice").value)
-let img = document.getElementById("pimg").value
-if(name && price && img){
-products.push({name:name, price:price, img:img})
-localStorage.setItem("products", JSON.stringify(products))
-showProducts()
-alert("Product Added!")
-document.getElementById("pname").value=""
-document.getElementById("pprice").value=""
-document.getElementById("pimg").value=""
-}else{
-alert("Fill all fields")
-}
-}
 
-function removeProduct(index){
-if(confirm("Remove this product?")){
-products.splice(index,1)
-localStorage.setItem("products", JSON.stringify(products))
-showProducts()
-}
-}
+let name=document.getElementById("name").value;
+let price=document.getElementById("price").value;
+let image=document.getElementById("image").value;
+let rating=document.getElementById("rating").value;
 
-function editProduct(index){
-let name = prompt("Edit Name", products[index].name)
-let price = prompt("Edit Price", products[index].price)
-let img = prompt("Edit Image URL", products[index].img)
-if(name && price && img){
-products[index] = {name:name, price:parseInt(price), img:img}
-localStorage.setItem("products", JSON.stringify(products))
-showProducts()
-}
-}
+let products=JSON.parse(localStorage.getItem("products")) || [];
 
-// Display orders
-function showOrders(){
-let container = document.getElementById("orders")
-container.innerHTML=""
-orders.forEach((o,i)=>{
-container.innerHTML += `
-<div class="order">
-<div>
-<h4>${o.name}</h4>
-<p>₦${o.price}</p>
-<p>Status: <select onchange="updateStatus(${i},this.value)">
-<option ${o.status==="Processing"?"selected":""}>Processing</option>
-<option ${o.status==="Order Ready"?"selected":""}>Order Ready</option>
-<option ${o.status==="Delivered"?"selected":""}>Delivered</option>
-</select></p>
-</div>
-</div>
-`
-})
-}
+products.push({
+name:name,
+price:price,
+image:image,
+rating:rating
+});
 
-// Update order status
-function updateStatus(index,value){
-orders[index].status = value
-localStorage.setItem("orders", JSON.stringify(orders))
-alert("Status Updated!")
-}
+localStorage.setItem("products",JSON.stringify(products));
 
-// Initial load
-showProducts()
-showOrders()
+alert("Product Added");
+
+}
 
 </script>
 
