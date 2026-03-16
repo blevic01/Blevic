@@ -2,65 +2,114 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Shooting Game - Blevic Superstore</title>
+<title>Snake Game - Blevic Superstore</title>
 <style>
-body{margin:0;padding:0;display:flex;flex-direction:column;align-items:center;background:#222;color:white;font-family:Arial;}
-canvas{border:2px solid #ff9900;margin-top:20px;}
-#aim{position:absolute;width:50px;height:50px;border:2px solid #ff0;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);}
+body{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-family:Arial; margin:0; background:#111; color:white;
+}
+#snakeCanvas{
+  background:#222; margin-top:20px; border:2px solid #ff9900;
+}
+#controls{
+  display:grid; grid-template-columns:repeat(3,70px); grid-template-rows:repeat(3,70px); gap:10px; margin-top:20px;
+}
+#controls button{
+  font-size:28px; border:none; border-radius:8px; background:#ff6a00; color:white; cursor:pointer;
+}
+#controls .empty{background:transparent; cursor:default;}
 </style>
 </head>
 <body>
 
-<h2>Shooting Game</h2>
-<canvas id="shootCanvas" width="350" height="400"></canvas>
-<div id="aim"></div>
+<h2>Snake Game</h2>
+<canvas id="snakeCanvas" width="350" height="350"></canvas>
+
+<div id="controls">
+  <div class="empty"></div>
+  <button onclick="changeDirection('up')">⬆</button>
+  <div class="empty"></div>
+  <button onclick="changeDirection('left')">⬅</button>
+  <div class="empty"></div>
+  <button onclick="changeDirection('right')">➡</button>
+  <div class="empty"></div>
+  <button onclick="changeDirection('down')">⬇</button>
+  <div class="empty"></div>
+</div>
 
 <script>
-const canvas=document.getElementById("shootCanvas");
-const ctx=canvas.getContext("2d");
-const aim=document.getElementById("aim");
-let targets=[];
+const canvas=document.getElementById('snakeCanvas');
+const ctx=canvas.getContext('2d');
+const scale=15;
+let direction='right';
+let snake=[{x:5*scale,y:5*scale}];
+let food={x:Math.floor(Math.random()*23)*scale, y:Math.floor(Math.random()*23)*scale};
+let powerups=[];
 
-// Spawn targets
-function spawnTarget(){
-  let size=40;
-  targets.push({x:Math.random()*(canvas.width-size), y:Math.random()*(canvas.height-size), size:size});
-}
+// Control function
+function changeDirection(dir){ direction=dir; }
 
 // Draw everything
 function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  // Draw targets
-  targets.forEach(t=>{
-    ctx.fillStyle="red";
-    ctx.fillRect(t.x,t.y,t.size,t.size);
+  ctx.fillStyle="#222";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // Draw snake
+  ctx.fillStyle="#0f0";
+  snake.forEach(s=> ctx.fillRect(s.x,s.y,scale,scale));
+
+  // Draw food
+  ctx.fillStyle="#f00";
+  ctx.fillRect(food.x,food.y,scale,scale);
+
+  // Draw power-ups
+  ctx.fillStyle="#ff0";
+  powerups.forEach(p=> ctx.fillRect(p.x,p.y,scale,scale));
+}
+
+// Update game
+function update(){
+  let head={...snake[0]};
+  if(direction==='right') head.x+=scale;
+  if(direction==='left') head.x-=scale;
+  if(direction==='up') head.y-=scale;
+  if(direction==='down') head.y+=scale;
+
+  // Wall wrap
+  if(head.x>=canvas.width) head.x=0;
+  if(head.x<0) head.x=canvas.width-scale;
+  if(head.y>=canvas.height) head.y=0;
+  if(head.y<0) head.y=canvas.height-scale;
+
+  snake.unshift(head);
+
+  // Eat food
+  if(head.x===food.x && head.y===food.y){
+    food={x:Math.floor(Math.random()*23)*scale, y:Math.floor(Math.random()*23)*scale};
+    spawnPowerup(); // spawn power-ups every time food eaten
+  }else{
+    snake.pop();
+  }
+
+  // Eat power-ups
+  powerups.forEach((p,i)=>{
+    if(head.x===p.x && head.y===p.y){
+      powerups.splice(i,1);
+      snake.push({...snake[snake.length-1]}); // grow snake
+    }
   });
-}
-setInterval(draw,20);
-setInterval(spawnTarget,2000); // spawn every 2 seconds
 
-// Aim moves with finger/mouse
-canvas.addEventListener("mousemove",e=>{
-  const rect=canvas.getBoundingClientRect();
-  aim.style.left=(e.clientX-rect.left)+'px';
-  aim.style.top=(e.clientY-rect.top)+'px';
-});
-canvas.addEventListener("touchmove",e=>{
-  const rect=canvas.getBoundingClientRect();
-  const touch=e.touches[0];
-  aim.style.left=(touch.clientX-rect.left)+'px';
-  aim.style.top=(touch.clientY-rect.top)+'px';
-});
-
-// Shoot on click/tap
-canvas.addEventListener("click",shoot);
-canvas.addEventListener("touchstart",shoot);
-function shoot(e){
-  const rect=canvas.getBoundingClientRect();
-  const x=(e.clientX||e.touches[0].clientX)-rect.left;
-  const y=(e.clientY||e.touches[0].clientY)-rect.top;
-  targets=targets.filter(t=>!(x>t.x && x<t.x+t.size && y>t.y && y<t.y+t.size));
+  draw();
 }
+
+// Spawn multiple power-ups randomly
+function spawnPowerup(){
+  for(let i=0;i<3;i++){ // spawn 3 at a time
+    powerups.push({x:Math.floor(Math.random()*23)*scale,y:Math.floor(Math.random()*23)*scale});
+  }
+}
+
+setInterval(update,180); // game speed
 </script>
 
 </body>
