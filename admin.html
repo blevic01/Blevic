@@ -102,3 +102,20 @@ loadProducts();
 
 </body>
 </html>
+<h2>Customer Orders</h2>
+
+<div id="orders"></div>
+
+<script>
+
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+let box=document.getElementById("orders");
+
+orders.forEach(o=>{
+
+box.innerHTML += "<p>Order received at "+o.date+"</p>";
+
+});
+
+</script>
