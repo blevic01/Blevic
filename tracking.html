@@ -3,18 +3,16 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Track Order</title>
+<title>Blevic Delivery Tracking</title>
 
 <style>
 
 body{
 font-family:Arial;
+margin:0;
 background:#f5f5f5;
 text-align:center;
-margin:0;
 }
-
-/* INPUT */
 
 input{
 padding:10px;
@@ -33,28 +31,14 @@ border-radius:6px;
 margin-top:10px;
 }
 
-/* STATUS BAR */
+/* DRIVER CARD */
 
-.progress{
-width:90%;
-height:20px;
-background:#ddd;
-margin:20px auto;
+.driver{
+background:white;
+margin:15px;
+padding:15px;
 border-radius:10px;
-overflow:hidden;
-}
-
-.bar{
-height:100%;
-width:0%;
-background:#ff6600;
-}
-
-/* STATUS TEXT */
-
-.status{
-font-weight:bold;
-margin-top:10px;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
 }
 
 /* MAP */
@@ -62,7 +46,16 @@ margin-top:10px;
 #map{
 height:300px;
 width:100%;
-margin-top:20px;
+margin-top:10px;
+}
+
+/* DELIVERY INFO */
+
+.info{
+background:white;
+margin:15px;
+padding:15px;
+border-radius:10px;
 }
 
 </style>
@@ -71,19 +64,35 @@ margin-top:20px;
 
 <body>
 
-<h2>Blevic Delivery Tracking</h2>
+<h2>Track Your Delivery</h2>
 
 <input id="code" placeholder="Enter Order Code">
 
 <br>
 
-<button onclick="startTracking()">Track Order</button>
+<button onclick="track()">Track Order</button>
 
-<div class="progress">
-<div class="bar" id="bar"></div>
+<!-- DRIVER PROFILE -->
+
+<div class="driver">
+
+<h3>Driver Information</h3>
+
+<p><b>Name:</b> John Rider</p>
+
+<p><b>Phone:</b> 08012345678</p>
+
 </div>
 
-<p class="status" id="status">Waiting for tracking...</p>
+<!-- DELIVERY DETAILS -->
+
+<div class="info">
+
+<p id="distance">Distance: calculating...</p>
+
+<p id="timer">Arrival Time: --</p>
+
+</div>
 
 <div id="map"></div>
 
@@ -91,55 +100,25 @@ margin-top:20px;
 
 let map
 let marker
+let distance = 5
 
-function startTracking(){
+function track(){
 
 let saved = localStorage.getItem("orderCode")
 let input = document.getElementById("code").value
 
 if(input!=saved){
 
-document.getElementById("status").innerText="Invalid Order Code"
+alert("Invalid order code")
 return
 
 }
 
-document.getElementById("status").innerText="Order Received"
-
-let progress=0
-
-let steps=[
-"Order Received",
-"Preparing Package",
-"Out for Delivery 🚚",
-"Delivered Successfully"
-]
-
-let i=0
-
-let timer=setInterval(()=>{
-
-progress+=25
-
-document.getElementById("bar").style.width=progress+"%"
-
-document.getElementById("status").innerText=steps[i]
-
-i++
-
-if(progress>=100){
-
-clearInterval(timer)
-
-}
-
-},4000)
-
 loadMap()
+startTimer()
+simulateDistance()
 
 }
-
-/* MAP */
 
 function loadMap(){
 
@@ -161,13 +140,11 @@ icon:"https://maps.google.com/mapfiles/kml/shapes/motorcycling.png"
 
 })
 
-moveBike()
+moveDriver()
 
 }
 
-/* SIMULATE DRIVER MOVEMENT */
-
-function moveBike(){
+function moveDriver(){
 
 let lat=6.5244
 let lng=3.3792
@@ -180,6 +157,55 @@ lng+=0.0005
 marker.setPosition({lat:lat,lng:lng})
 
 },3000)
+
+}
+
+/* DISTANCE SIMULATION */
+
+function simulateDistance(){
+
+let d = distance
+
+setInterval(()=>{
+
+if(d>0){
+
+d -= 0.5
+
+document.getElementById("distance").innerText =
+"Distance: "+d.toFixed(1)+" km away"
+
+}
+
+},3000)
+
+}
+
+/* TIMER */
+
+function startTimer(){
+
+let minutes = 10
+
+let timer = setInterval(()=>{
+
+if(minutes<=0){
+
+document.getElementById("timer").innerText =
+"Driver has arrived 🚚"
+
+clearInterval(timer)
+
+}else{
+
+document.getElementById("timer").innerText =
+"Arrival in "+minutes+" minutes"
+
+minutes--
+
+}
+
+},60000)
 
 }
 
