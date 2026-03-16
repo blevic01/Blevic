@@ -1,100 +1,126 @@
-<!-- CART PREVIEW -->
-<div id="cart-preview" style="display:none; position:fixed; top:20px; right:20px; background:rgba(0,0,0,0.85); color:white; padding:15px; border-radius:10px; max-width:250px;">
-  <h4>Your Cart</h4>
-  <div id="cart-items"></div>
-  <div style="margin-top:10px; font-weight:bold;">Total: ₦<span id="cart-total">0</span></div>
-  <button id="checkout" style="width:100%; margin-top:5px; padding:8px; border:none; border-radius:5px; background:#ff6a00; color:white; font-weight:bold;">Checkout</button>
-  <button id="paid" style="width:100%; margin-top:5px; padding:8px; border:none; border-radius:5px; background:#28a745; color:white; font-weight:bold;">I Have Paid</button>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Cart</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f5f5;
+}
+
+h2{
+text-align:center;
+}
+
+.cart{
+padding:10px;
+}
+
+.item{
+background:white;
+padding:10px;
+margin-bottom:10px;
+border-radius:10px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.item img{
+width:60px;
+border-radius:6px;
+}
+
+.qty button{
+padding:5px;
+}
+
+.checkout{
+background:green;
+color:white;
+padding:10px;
+border:none;
+width:100%;
+border-radius:6px;
+font-size:18px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>Your Cart</h2>
+
+<div class="cart" id="cart"></div>
+
+<button class="checkout">Checkout</button>
 
 <script>
-// Sample products (same as products.html)
-let products = [
-  {name:"Eva Soap Pack", price:700, image:"https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png"},
-  {name:"Dove Shampoo", price:1200, image:"https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png"},
-  {name:"Lux Soap Pack", price:800, image:"https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png"},
-  {name:"Hand Sanitizer", price:500, image:"https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png"}
-];
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-const cartCount = document.getElementById("cart-count");
-const cartItemsDiv = document.getElementById("cart-items");
-const cartTotal = document.getElementById("cart-total");
 
-// Update cart counter
-function updateCartCounter(){
-  cartCount.innerText = cart.reduce((sum,i)=>sum+i.qty,0);
+function loadCart(){
+
+let container=document.getElementById("cart");
+container.innerHTML="";
+
+if(cart.length==0){
+container.innerHTML="<p>Cart is empty</p>";
+return;
 }
 
-// Render cart items
-function renderCartPreview(){
-  cartItemsDiv.innerHTML="";
-  if(cart.length===0){ cartItemsDiv.innerHTML="<p>Your cart is empty!</p>"; cartTotal.innerText="0"; return; }
-  let total=0;
-  cart.forEach((c,i)=>{
-    let prod = products[c.index];
-    total += prod.price*c.qty;
-    let div=document.createElement("div");
-    div.style.display="flex"; div.style.justifyContent="space-between"; div.style.alignItems="center"; div.style.marginBottom="8px";
-    div.innerHTML=`
-      <img src="${prod.image}" style="width:40px; border-radius:5px;">
-      <span>${prod.name} ₦${prod.price}</span>
-      <div>
-        <button onclick="changeQty(${i},-1)">-</button>
-        <span>${c.qty}</span>
-        <button onclick="changeQty(${i},1)">+</button>
-      </div>
-      <button onclick="removeItem(${i})" style="background:red; color:white; border:none; border-radius:4px; padding:2px 5px;">x</button>
-    `;
-    cartItemsDiv.appendChild(div);
-  });
-  cartTotal.innerText = total;
+cart.forEach((item,index)=>{
+
+let div=document.createElement("div");
+div.className="item";
+
+div.innerHTML=`
+
+<img src="${item.image}">
+<div>
+<b>${item.name}</b><br>
+₦${item.price}
+</div>
+
+<div class="qty">
+
+<button onclick="changeQty(${index},-1)">-</button>
+
+${item.qty}
+
+<button onclick="changeQty(${index},1)">+</button>
+
+</div>
+
+`;
+
+container.appendChild(div);
+
+});
+
 }
 
-// Change quantity
-function changeQty(cartIndex,delta){
-  cart[cartIndex].qty += delta;
-  if(cart[cartIndex].qty<=0){ cart.splice(cartIndex,1); }
-  localStorage.setItem("cart",JSON.stringify(cart));
-  updateCartCounter();
-  renderCartPreview();
+function changeQty(i,change){
+
+cart[i].qty+=change;
+
+if(cart[i].qty<=0){
+cart.splice(i,1);
 }
 
-// Remove item
-function removeItem(cartIndex){
-  cart.splice(cartIndex,1);
-  localStorage.setItem("cart",JSON.stringify(cart));
-  updateCartCounter();
-  renderCartPreview();
+localStorage.setItem("cart",JSON.stringify(cart));
+
+loadCart();
+
 }
 
-// Toggle cart visibility
-function toggleCart(){
-  let cartPreview=document.getElementById("cart-preview");
-  cartPreview.style.display = (cartPreview.style.display==="block")?"none":"block";
-  renderCartPreview();
-}
+loadCart();
 
-// Checkout button
-document.getElementById("checkout").onclick=function(){
-  if(cart.length===0){ alert("Cart is empty!"); return; }
-  let orderCode = "BLEVIC"+Math.floor(Math.random()*90000+10000);
-  localStorage.setItem("lastOrderCode",orderCode);
-  alert("Checkout complete! Your order code: "+orderCode);
-}
-
-// I Have Paid button
-document.getElementById("paid").onclick=function(){
-  if(cart.length===0){ alert("Cart is empty!"); return; }
-  let orderCode = localStorage.getItem("lastOrderCode") || "BLEVIC"+Math.floor(Math.random()*90000+10000);
-  let whatsappNumber = "08032390904";
-  let message = `I want to order these products and I have paid. Order code: ${orderCode}`;
-  window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`,"_blank");
-  cart=[];
-  localStorage.removeItem("cart");
-  updateCartCounter();
-  renderCartPreview();
-}
-
-updateCartCounter();
 </script>
+
+</body>
+</html>
