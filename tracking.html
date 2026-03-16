@@ -2,38 +2,49 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Track Order - Blevic Superstore</title>
-<style>
-body{font-family:Arial;text-align:center;background:#f5f5f5;margin:0;padding:20px;}
-input{padding:10px;width:80%;max-width:300px;margin:10px 0;border-radius:5px;border:1px solid #ccc;}
-button{padding:12px 20px;margin:5px;border:none;border-radius:6px;background:#ff6a00;color:white;cursor:pointer;}
-#track-status{margin-top:15px;font-size:18px;font-weight:bold;}
-</style>
 </head>
+
 <body>
-<h2>Track Your Order</h2>
-<input type="text" id="orderCode" placeholder="Enter your order code"><br>
+
+<h2>Track Order</h2>
+
+<input id="code" placeholder="Enter order code">
+
 <button onclick="track()">Track</button>
-<div id="track-status"></div>
+
+<p id="result"></p>
 
 <script>
+
 function track(){
-  let input = document.getElementById("orderCode").value.trim();
-  let lastCode = localStorage.getItem("lastOrderCode");
-  let statusDiv = document.getElementById("track-status");
-  if(input===""){ alert("Please enter your order code"); return; }
-  statusDiv.innerText="Processing your order...";
-  setTimeout(()=>{
-    if(input===lastCode){
-      statusDiv.innerText="✅ Your order is ready!";
-      let msg="Hello, I want to order my product and I have paid it. My order code is: "+input;
-      let whatsappURL="https://wa.me/08032390904?text="+encodeURIComponent(msg);
-      window.open(whatsappURL,"_blank");
-    }else{
-      statusDiv.innerText="❌ Invalid code. Please check again.";
-    }
-  },5000);
+
+let saved = localStorage.getItem("orderCode");
+
+let input = document.getElementById("code").value;
+
+if(input==saved){
+
+document.getElementById("result").innerHTML="Processing...";
+
+setTimeout(()=>{
+
+document.getElementById("result").innerHTML="Order Ready";
+
+window.open("https://wa.me/2348032390904");
+
+},5000);
+
 }
+
+else{
+
+document.getElementById("result").innerHTML="Invalid code";
+
+}
+
+}
+
 </script>
+
 </body>
 </html>
