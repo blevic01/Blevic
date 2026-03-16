@@ -2,139 +2,204 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Blevic Superstore</title>
+
 <style>
-html, body {margin:0; padding:0; height:100%; font-family:Arial; overflow-x:hidden;}
-body {
-  background: url('https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png') no-repeat center center fixed;
-  background-size: cover;
-  color:white;
-  text-shadow: 2px 2px 5px #000;
+
+body{
+font-family:Arial;
+margin:0;
+background:#f5f5f5;
 }
 
-/* WELCOME MESSAGE */
-#welcome { text-align:center; font-size:22px; font-weight:bold; margin-top:20px; }
+/* HEADER */
 
-/* MAIN BUTTONS */
-.main-buttons { display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:40px; }
-.main-buttons button {
-  padding:15px 25px; font-size:18px; border:none; border-radius:10px; background: rgba(255,105,0,0.8); color:white; cursor:pointer; font-weight:bold;
+.header{
+background:#ff6600;
+color:white;
+padding:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
-.main-buttons button:hover { background: rgba(255,140,51,0.9); }
 
-/* FLOATING BUTTONS */
-.floating { position: fixed; bottom:20px; right:20px; background:#ff9900; color:white; padding:18px; border-radius:50%; font-size:24px; cursor:pointer; box-shadow:0 5px 12px rgba(0,0,0,0.3); }
-.floating-customer { position: fixed; bottom:20px; right:90px; background:#0288d1; color:white; padding:18px; border-radius:50%; font-size:24px; cursor:pointer; box-shadow:0 5px 12px rgba(0,0,0,0.3); }
-
-/* CART PREVIEW POPUP */
-#cart-preview {
-  position: fixed; top:20px; right:20px; background:rgba(0,0,0,0.8); padding:15px; border-radius:10px; display:none; max-width:250px;
+.cart{
+font-size:22px;
+cursor:pointer;
 }
-#cart-preview h4{ margin:0 0 10px 0; text-align:center; }
-.cart-item{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-.cart-item img{ width:40px; border-radius:5px; }
-.cart-item button{ background:red; color:white; border:none; border-radius:4px; cursor:pointer; padding:2px 5px; font-size:12px; }
-#checkout, #paid { width:100%; padding:8px; margin-top:5px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; }
-#checkout{ background:#ff6a00; color:white; }
-#paid{ background:#28a745; color:white; }
+
+.cart span{
+background:red;
+border-radius:50%;
+padding:2px 6px;
+font-size:14px;
+}
+
+/* SLIDER */
+
+.slider{
+width:100%;
+height:180px;
+overflow:hidden;
+}
+
+.slider img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+/* BUTTONS */
+
+.menu{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+padding:10px;
+}
+
+.menu button{
+padding:15px;
+border:none;
+background:white;
+border-radius:8px;
+box-shadow:0 2px 6px rgba(0,0,0,0.2);
+font-size:16px;
+cursor:pointer;
+}
+
+/* DAILY REWARD */
+
+.reward{
+background:white;
+margin:10px;
+padding:15px;
+border-radius:8px;
+text-align:center;
+}
 
 </style>
 </head>
+
 <body>
 
-<div id="welcome"></div>
+<!-- HEADER -->
 
-<div class="main-buttons">
-  <button onclick="goProducts()">🛍 Products</button>
-  <button onclick="toggleCart()">🛒 Cart <span id="cart-count">0</span></button>
-  <button onclick="goLogin()">🔑 Login / Signup</button>
-  <button onclick="goTracking()">📦 Track Order</button>
+<div class="header">
+
+<div id="welcome">Welcome</div>
+
+<div class="cart" onclick="openCart()">
+🛒 <span id="cartCount">0</span>
 </div>
 
-<div class="floating" onclick="goGames()">🎮</div>
-<div class="floating-customer" onclick="goCustomerCare()">💬</div>
+</div>
 
-<!-- CART PREVIEW -->
-<div id="cart-preview">
-  <h4>Your Cart</h4>
-  <div id="cart-items"></div>
-  <button id="checkout">Checkout</button>
-  <button id="paid">I Have Paid</button>
+<!-- AUTO SLIDER -->
+
+<div class="slider">
+
+<img id="slide" src="https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png">
+
+</div>
+
+<!-- MAIN BUTTONS -->
+
+<div class="menu">
+
+<button onclick="location.href='products.html'">🛍 Products</button>
+
+<button onclick="location.href='cart.html'">🛒 Cart</button>
+
+<button onclick="location.href='tracking.html'">📦 Track Order</button>
+
+<button onclick="location.href='games.html'">🎮 Games</button>
+
+</div>
+
+<!-- DAILY REWARD -->
+
+<div class="reward">
+
+<h3>Daily Reward</h3>
+
+<p id="rewardText">Click to claim reward</p>
+
+<button onclick="claimReward()">Claim Reward</button>
+
 </div>
 
 <script>
-// Show username if logged in
-let username = localStorage.getItem("username");
-if(username){
-  document.getElementById("welcome").innerText = "Hi "+username+" 👋 Welcome to Blevic Superstore";
+
+/* AUTO SLIDER */
+
+let images=[
+"https://i.postimg.cc/2S5JW9m7/file-00000000ec44724686c377d13d0f8765.png",
+"https://i.postimg.cc/QMdXHJnZ/file-00000000c9d07246a98b3cee735de787.png"
+]
+
+let i=0;
+
+setInterval(()=>{
+
+i++
+
+if(i>=images.length) i=0
+
+document.getElementById("slide").src=images[i]
+
+},3000)
+
+/* CART COUNTER */
+
+let cart=JSON.parse(localStorage.getItem("cart"))||[]
+
+let total=0
+
+cart.forEach(p=> total+=p.qty)
+
+document.getElementById("cartCount").innerText=total
+
+/* LOGIN SYSTEM */
+
+let user=localStorage.getItem("username")
+
+if(!user){
+
+user=prompt("Enter your name")
+
+localStorage.setItem("username",user)
+
 }
 
-// Cart functions
-let cart = JSON.parse(localStorage.getItem("cart"))||[];
-const cartCount = document.getElementById("cart-count");
-const cartPreview = document.getElementById("cart-preview");
-const cartItemsDiv = document.getElementById("cart-items");
+document.getElementById("welcome").innerText="Hi "+user
 
-function updateCartCounter(){
-  cartCount.innerText = cart.length;
+/* DAILY REWARD */
+
+function claimReward(){
+
+let today=new Date().toDateString()
+
+let last=localStorage.getItem("rewardDate")
+
+if(today==last){
+
+alert("You already claimed today")
+
+return
+
 }
 
-function renderCartPreview(){
-  cartItemsDiv.innerHTML="";
-  if(cart.length===0){
-    cartItemsDiv.innerHTML="<p>Your cart is empty!</p>";
-    return;
-  }
-  cart.forEach((item,index)=>{
-    let div = document.createElement("div");
-    div.className="cart-item";
-    div.innerHTML = `<img src="${item.image}"><span>${item.name} ₦${item.price}</span><button onclick="removeItem(${index})">x</button>`;
-    cartItemsDiv.appendChild(div);
-  });
+localStorage.setItem("rewardDate",today)
+
+alert("You received 10 coins!")
+
+document.getElementById("rewardText").innerText="Reward claimed today"
+
 }
 
-function toggleCart(){
-  if(cartPreview.style.display==="none" || cartPreview.style.display===""){
-    cartPreview.style.display="block";
-    renderCartPreview();
-  }else{
-    cartPreview.style.display="none";
-  }
-}
-
-function removeItem(index){
-  cart.splice(index,1);
-  localStorage.setItem("cart",JSON.stringify(cart));
-  updateCartCounter();
-  renderCartPreview();
-}
-
-// Checkout button
-document.getElementById("checkout").onclick=function(){
-  if(cart.length===0){ alert("Cart is empty!"); return; }
-  alert("Checkout simulated. You can now click 'I Have Paid'.");
-}
-
-// I Have Paid button
-document.getElementById("paid").onclick=function(){
-  if(cart.length===0){ alert("Cart is empty!"); return; }
-  let orderCode = "BLEVIC"+Math.floor(Math.random()*90000+10000);
-  localStorage.setItem("lastOrderCode",orderCode);
-  alert("Payment confirmed! Your order code: "+orderCode);
-  cart = [];
-  localStorage.removeItem("cart");
-  updateCartCounter();
-  renderCartPreview();
-}
-
-// Navigation functions
-function goProducts(){ window.location.href="products.html"; }
-function goLogin(){ window.location.href="login.html"; }
-function goGames(){ window.location.href="games.html"; }
-function goCustomerCare(){ window.location.href="chat.html"; }
-function goTracking(){ window.location.href="tracking.html"; } // <-- Track Order button
-
-updateCartCounter();
 </script>
+
 </body>
 </html>
