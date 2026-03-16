@@ -3,92 +3,147 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Track Order - Blevic Superstore</title>
+<title>Track Order</title>
 
 <style>
 
 body{
 font-family:Arial;
-margin:0;
 background:#f5f5f5;
 text-align:center;
+margin:0;
 }
+
+/* INPUT */
 
 input{
 padding:10px;
 width:80%;
-margin:10px;
+margin-top:20px;
 border-radius:6px;
 border:1px solid #ccc;
 }
 
 button{
-padding:10px 15px;
+padding:10px 20px;
 background:#ff6600;
 color:white;
 border:none;
 border-radius:6px;
+margin-top:10px;
 }
+
+/* STATUS BAR */
+
+.progress{
+width:90%;
+height:20px;
+background:#ddd;
+margin:20px auto;
+border-radius:10px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:#ff6600;
+}
+
+/* STATUS TEXT */
+
+.status{
+font-weight:bold;
+margin-top:10px;
+}
+
+/* MAP */
 
 #map{
 height:300px;
 width:100%;
-margin-top:15px;
-}
-
-.status{
-margin-top:15px;
-font-weight:bold;
+margin-top:20px;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<h2>Track Your Order</h2>
+<h2>Blevic Delivery Tracking</h2>
 
 <input id="code" placeholder="Enter Order Code">
 
 <br>
 
-<button onclick="track()">Track Order</button>
+<button onclick="startTracking()">Track Order</button>
 
-<p class="status" id="status"></p>
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<p class="status" id="status">Waiting for tracking...</p>
 
 <div id="map"></div>
 
 <script>
 
-function track(){
+let map
+let marker
+
+function startTracking(){
 
 let saved = localStorage.getItem("orderCode")
-
 let input = document.getElementById("code").value
 
-if(input == saved){
+if(input!=saved){
 
-document.getElementById("status").innerText="Locating delivery..."
+document.getElementById("status").innerText="Invalid Order Code"
+return
 
-setTimeout(()=>{
+}
 
-document.getElementById("status").innerText="Driver is near your location 🚚"
+document.getElementById("status").innerText="Order Received"
+
+let progress=0
+
+let steps=[
+"Order Received",
+"Preparing Package",
+"Out for Delivery 🚚",
+"Delivered Successfully"
+]
+
+let i=0
+
+let timer=setInterval(()=>{
+
+progress+=25
+
+document.getElementById("bar").style.width=progress+"%"
+
+document.getElementById("status").innerText=steps[i]
+
+i++
+
+if(progress>=100){
+
+clearInterval(timer)
+
+}
+
+},4000)
 
 loadMap()
 
-},3000)
-
-}else{
-
-document.getElementById("status").innerText="Invalid order code"
-
 }
 
-}
+/* MAP */
 
 function loadMap(){
 
-let map = new google.maps.Map(document.getElementById("map"),{
+map = new google.maps.Map(document.getElementById("map"),{
 
 zoom:14,
 
@@ -96,15 +151,35 @@ center:{lat:6.5244,lng:3.3792}
 
 })
 
-let marker = new google.maps.Marker({
+marker = new google.maps.Marker({
 
 position:{lat:6.5244,lng:3.3792},
 
 map:map,
 
-title:"Delivery Location"
+icon:"https://maps.google.com/mapfiles/kml/shapes/motorcycling.png"
 
 })
+
+moveBike()
+
+}
+
+/* SIMULATE DRIVER MOVEMENT */
+
+function moveBike(){
+
+let lat=6.5244
+let lng=3.3792
+
+setInterval(()=>{
+
+lat+=0.0005
+lng+=0.0005
+
+marker.setPosition({lat:lat,lng:lng})
+
+},3000)
 
 }
 
