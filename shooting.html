@@ -1,104 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bottle Shooting Game</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shooting Game - Blevic Superstore</title>
 <style>
-
-body{
-margin:0;
-text-align:center;
-font-family:Arial;
-background:#222;
-color:white;
-}
-
-canvas{
-background:url("https://i.postimg.cc/zf0C7X6P/desert.jpg");
-background-size:cover;
-}
-
+body{margin:0;padding:0;display:flex;flex-direction:column;align-items:center;background:#222;color:white;font-family:Arial;}
+canvas{border:2px solid #ff9900;margin-top:20px;}
+#aim{position:absolute;width:50px;height:50px;border:2px solid #ff0;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);}
 </style>
-
 </head>
-
 <body>
 
-<h2>Bottle Shooting Game</h2>
-<p>Tap the bottles to shoot them</p>
-
-<canvas id="game" width="350" height="500"></canvas>
-
-<p>Score: <span id="score">0</span></p>
+<h2>Shooting Game</h2>
+<canvas id="shootCanvas" width="350" height="400"></canvas>
+<div id="aim"></div>
 
 <script>
+const canvas=document.getElementById("shootCanvas");
+const ctx=canvas.getContext("2d");
+const aim=document.getElementById("aim");
+let targets=[];
 
-let canvas=document.getElementById("game")
-let ctx=canvas.getContext("2d")
-
-let score=0
-
-let bottles=[]
-
-function createBottle(){
-
-bottles.push({
-x:Math.random()*300,
-y:500,
-speed:2+Math.random()*3
-})
-
+// Spawn targets
+function spawnTarget(){
+  let size=40;
+  targets.push({x:Math.random()*(canvas.width-size), y:Math.random()*(canvas.height-size), size:size});
 }
 
-setInterval(createBottle,1200)
-
-canvas.addEventListener("click",shoot)
-
-function shoot(e){
-
-let rect=canvas.getBoundingClientRect()
-
-let mx=e.clientX-rect.left
-let my=e.clientY-rect.top
-
-bottles.forEach((bottle,index)=>{
-
-if(mx>bottle.x && mx<bottle.x+30 &&
-   my>bottle.y && my<bottle.y+60){
-
-score++
-document.getElementById("score").innerText=score
-
-bottles.splice(index,1)
-
-}
-
-})
-
-}
-
+// Draw everything
 function draw(){
-
-ctx.clearRect(0,0,350,500)
-
-ctx.fillStyle="brown"
-
-bottles.forEach(bottle=>{
-
-ctx.fillRect(bottle.x,bottle.y,30,60)
-
-bottle.y-=bottle.speed
-
-})
-
-requestAnimationFrame(draw)
-
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Draw targets
+  targets.forEach(t=>{
+    ctx.fillStyle="red";
+    ctx.fillRect(t.x,t.y,t.size,t.size);
+  });
 }
+setInterval(draw,20);
+setInterval(spawnTarget,2000); // spawn every 2 seconds
 
-draw()
+// Aim moves with finger/mouse
+canvas.addEventListener("mousemove",e=>{
+  const rect=canvas.getBoundingClientRect();
+  aim.style.left=(e.clientX-rect.left)+'px';
+  aim.style.top=(e.clientY-rect.top)+'px';
+});
+canvas.addEventListener("touchmove",e=>{
+  const rect=canvas.getBoundingClientRect();
+  const touch=e.touches[0];
+  aim.style.left=(touch.clientX-rect.left)+'px';
+  aim.style.top=(touch.clientY-rect.top)+'px';
+});
 
+// Shoot on click/tap
+canvas.addEventListener("click",shoot);
+canvas.addEventListener("touchstart",shoot);
+function shoot(e){
+  const rect=canvas.getBoundingClientRect();
+  const x=(e.clientX||e.touches[0].clientX)-rect.left;
+  const y=(e.clientY||e.touches[0].clientY)-rect.top;
+  targets=targets.filter(t=>!(x>t.x && x<t.x+t.size && y>t.y && y<t.y+t.size));
+}
 </script>
 
 </body>
