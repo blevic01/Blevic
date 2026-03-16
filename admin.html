@@ -2,22 +2,43 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Blevic Admin</title>
 
 <style>
-body{font-family:Arial;background:#f2f2f2;padding:20px;}
-input,select{width:100%;padding:10px;margin:5px 0;border-radius:6px;}
-button{padding:8px;background:#ff6600;color:white;border:none;border-radius:6px;}
-.product{background:white;padding:10px;margin-top:10px;border-radius:8px;}
+
+body{
+font-family:Arial;
+padding:20px;
+background:#f5f5f5;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin:6px 0;
+}
+
+button{
+padding:10px;
+background:#ff6600;
+color:white;
+border:none;
+border-radius:6px;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<h2>Admin Dashboard</h2>
+<h2>Add Product</h2>
 
-<input id="name" placeholder="Product Name">
+<input id="name" placeholder="Product name">
+
 <input id="price" placeholder="Price">
+
 <input id="image" placeholder="Image URL">
 
 <select id="rating">
@@ -30,92 +51,26 @@ button{padding:8px;background:#ff6600;color:white;border:none;border-radius:6px;
 
 <button onclick="addProduct()">Add Product</button>
 
-<h3>Products</h3>
-<div id="adminProducts"></div>
-
 <script>
-
-let products = JSON.parse(localStorage.getItem("products")) || [];
-
-function save(){
-localStorage.setItem("products",JSON.stringify(products));
-loadProducts();
-}
 
 function addProduct(){
 
-let p={
-name:name.value,
-price:price.value,
-image:image.value,
-rating:rating.value
-};
+let name=document.getElementById("name").value
+let price=document.getElementById("price").value
+let image=document.getElementById("image").value
+let rating=document.getElementById("rating").value
 
-products.push(p);
-save();
-}
+let products=JSON.parse(localStorage.getItem("products")) || []
 
-function deleteProduct(i){
-products.splice(i,1);
-save();
-}
+products.push({name,price,image,rating})
 
-function editProduct(i){
+localStorage.setItem("products",JSON.stringify(products))
 
-let p=products[i];
-
-name.value=p.name;
-price.value=p.price;
-image.value=p.image;
-rating.value=p.rating;
-
-products.splice(i,1);
-save();
-}
-
-function loadProducts(){
-
-let box=document.getElementById("adminProducts");
-box.innerHTML="";
-
-products.forEach((p,i)=>{
-
-box.innerHTML+=`
-<div class="product">
-${p.name} - ₦${p.price}
-
-<br>
-
-<button onclick="editProduct(${i})">Edit</button>
-<button onclick="deleteProduct(${i})">Delete</button>
-
-</div>
-`;
-
-});
+alert("Product added successfully")
 
 }
-
-loadProducts();
 
 </script>
 
 </body>
 </html>
-<h2>Customer Orders</h2>
-
-<div id="orders"></div>
-
-<script>
-
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-let box=document.getElementById("orders");
-
-orders.forEach(o=>{
-
-box.innerHTML += "<p>Order received at "+o.date+"</p>";
-
-});
-
-</script>
