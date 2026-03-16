@@ -2,49 +2,115 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Track Order - Blevic Superstore</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f5f5f5;
+text-align:center;
+}
+
+input{
+padding:10px;
+width:80%;
+margin:10px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+padding:10px 15px;
+background:#ff6600;
+color:white;
+border:none;
+border-radius:6px;
+}
+
+#map{
+height:300px;
+width:100%;
+margin-top:15px;
+}
+
+.status{
+margin-top:15px;
+font-weight:bold;
+}
+
+</style>
 </head>
 
 <body>
 
-<h2>Track Order</h2>
+<h2>Track Your Order</h2>
 
-<input id="code" placeholder="Enter order code">
+<input id="code" placeholder="Enter Order Code">
 
-<button onclick="track()">Track</button>
+<br>
 
-<p id="result"></p>
+<button onclick="track()">Track Order</button>
+
+<p class="status" id="status"></p>
+
+<div id="map"></div>
 
 <script>
 
 function track(){
 
-let saved = localStorage.getItem("orderCode");
+let saved = localStorage.getItem("orderCode")
 
-let input = document.getElementById("code").value;
+let input = document.getElementById("code").value
 
-if(input==saved){
+if(input == saved){
 
-document.getElementById("result").innerHTML="Processing...";
+document.getElementById("status").innerText="Locating delivery..."
 
 setTimeout(()=>{
 
-document.getElementById("result").innerHTML="Order Ready";
+document.getElementById("status").innerText="Driver is near your location 🚚"
 
-window.open("https://wa.me/2348032390904");
+loadMap()
 
-},5000);
+},3000)
+
+}else{
+
+document.getElementById("status").innerText="Invalid order code"
+
+}
 
 }
 
-else{
+function loadMap(){
 
-document.getElementById("result").innerHTML="Invalid code";
+let map = new google.maps.Map(document.getElementById("map"),{
 
-}
+zoom:14,
+
+center:{lat:6.5244,lng:3.3792}
+
+})
+
+let marker = new google.maps.Marker({
+
+position:{lat:6.5244,lng:3.3792},
+
+map:map,
+
+title:"Delivery Location"
+
+})
 
 }
 
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js"></script>
 
 </body>
 </html>
