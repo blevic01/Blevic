@@ -2,210 +2,167 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Blevic Delivery Tracking</title>
+<title>Track Order - Blevic Superstore</title>
 
 <style>
-
 body{
 font-family:Arial;
-margin:0;
-background:#f5f5f5;
+background:#f4f4f4;
+padding:15px;
 text-align:center;
 }
 
 input{
 padding:10px;
-width:80%;
-margin-top:20px;
+width:90%;
 border-radius:6px;
 border:1px solid #ccc;
 }
 
 button{
-padding:10px 20px;
+padding:10px;
+margin:5px;
+border:none;
 background:#ff6600;
 color:white;
-border:none;
 border-radius:6px;
-margin-top:10px;
 }
 
-/* DRIVER CARD */
-
-.driver{
+.box{
 background:white;
-margin:15px;
 padding:15px;
+margin-top:10px;
 border-radius:10px;
-box-shadow:0 2px 5px rgba(0,0,0,0.2);
 }
-
-/* MAP */
 
 #map{
-height:300px;
 width:100%;
+height:250px;
+border-radius:10px;
 margin-top:10px;
 }
-
-/* DELIVERY INFO */
-
-.info{
-background:white;
-margin:15px;
-padding:15px;
-border-radius:10px;
-}
-
 </style>
-
 </head>
 
 <body>
 
-<h2>Track Your Delivery</h2>
+<h2>Track Your Order</h2>
 
 <input id="code" placeholder="Enter Order Code">
-
 <br>
-
 <button onclick="track()">Track Order</button>
 
-<!-- DRIVER PROFILE -->
-
-<div class="driver">
-
-<h3>Driver Information</h3>
-
-<p><b>Name:</b> John Rider</p>
-
-<p><b>Phone:</b> 08012345678</p>
-
-</div>
-
-<!-- DELIVERY DETAILS -->
-
-<div class="info">
-
-<p id="distance">Distance: calculating...</p>
-
-<p id="timer">Arrival Time: --</p>
-
-</div>
+<div id="result"></div>
 
 <div id="map"></div>
 
 <script>
 
-let map
-let marker
-let distance = 5
+let currentOrder = null
 
 function track(){
 
-let saved = localStorage.getItem("orderCode")
-let input = document.getElementById("code").value
+let code = document.getElementById("code").value
 
-if(input!=saved){
+let orders = JSON.parse(localStorage.getItem("orders")) || []
 
-alert("Invalid order code")
-return
+let found = orders.find(o => o.code === code)
 
-}
+if(found){
 
-loadMap()
+currentOrder = found
+
+let itemsHTML = ""
+
+found.items.forEach(i=>{
+itemsHTML += i.name + " x" + i.qty + "<br>"
+})
+
+document.getElementById("result").innerHTML = `
+
+<div class="box">
+
+<b>Order Code:</b> ${found.code}<br>
+<b>Status:</b> ${found.status}<br>
+<b>Total:</b> ₦${found.total}<br>
+
+<h4>Items:</h4>
+${itemsHTML}
+
+<h4>Driver:</h4>
+Name: John Rider<br>
+Phone: 08000000000
+
+<p id="timer"></p>
+
+<button onclick="contact()">Contact Store</button>
+
+</div>
+
+`
+
 startTimer()
-simulateDistance()
+
+showMap(found.location)
+
+}else{
+
+alert("Order not found")
 
 }
-
-function loadMap(){
-
-map = new google.maps.Map(document.getElementById("map"),{
-
-zoom:14,
-
-center:{lat:6.5244,lng:3.3792}
-
-})
-
-marker = new google.maps.Marker({
-
-position:{lat:6.5244,lng:3.3792},
-
-map:map,
-
-icon:"https://maps.google.com/mapfiles/kml/shapes/motorcycling.png"
-
-})
-
-moveDriver()
-
-}
-
-function moveDriver(){
-
-let lat=6.5244
-let lng=3.3792
-
-setInterval(()=>{
-
-lat+=0.0005
-lng+=0.0005
-
-marker.setPosition({lat:lat,lng:lng})
-
-},3000)
-
-}
-
-/* DISTANCE SIMULATION */
-
-function simulateDistance(){
-
-let d = distance
-
-setInterval(()=>{
-
-if(d>0){
-
-d -= 0.5
-
-document.getElementById("distance").innerText =
-"Distance: "+d.toFixed(1)+" km away"
-
-}
-
-},3000)
 
 }
 
 /* TIMER */
-
 function startTimer(){
 
-let minutes = 10
-
-let timer = setInterval(()=>{
-
-if(minutes<=0){
+let time = 10
+let t = setInterval(()=>{
 
 document.getElementById("timer").innerText =
-"Driver has arrived 🚚"
+"Delivery in: " + time + " mins"
 
-clearInterval(timer)
+time--
 
-}else{
-
+if(time < 0){
+clearInterval(t)
 document.getElementById("timer").innerText =
-"Arrival in "+minutes+" minutes"
+"Order Delivered ✅"
+}
 
-minutes--
+},1000)
 
 }
 
-},60000)
+/* MAP */
+function showMap(link){
+
+let coords = link.split("=")[1].split(",")
+
+let lat = parseFloat(coords[0])
+let lng = parseFloat(coords[1])
+
+let map = new google.maps.Map(document.getElementById("map"),{
+zoom:13,
+center:{lat:lat,lng:lng}
+})
+
+new google.maps.Marker({
+position:{lat:lat,lng:lng},
+map:map,
+title:"Customer"
+})
+
+}
+
+/* WHATSAPP */
+function contact(){
+
+let phone = "2348032390904"
+
+let msg = "Hello, I am tracking my order " + currentOrder.code
+
+window.open("https://wa.me/"+phone+"?text="+msg)
 
 }
 
